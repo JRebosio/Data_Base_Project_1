@@ -1,3 +1,7 @@
+#ifndef SEQFILE_H
+#define SEQFILE_H
+
+
 struct Point{
 public:
     char file[20];
@@ -383,3 +387,4 @@ public:
 };
 
 
+#endif
