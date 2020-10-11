@@ -51,6 +51,16 @@ public:
     bool operator<(const Registro& d) const {
         return string{nombre} < string{d.nombre};
     }
+     void setData() {
+        cout << "Codigo(5): ";
+        cin >> codigo;
+        cout << "Nombre(20): ";
+        cin >> nombre;
+        cout << "Carrera(15): ";
+        cin >> carrera;
+        cout << "Ciclo(15): ";
+        cin >> ciclo;
+    }
     void showData(){
         cout<<"\nId:";
         _id.showData();
@@ -141,10 +151,14 @@ private:
             inFile.close();
         }
         else{
+            //lo crea.
+            inFile.clear(); 
+            inFile.open(file, ios_base::out); // will create if necessary 
             return true;
         }
         return (bytes==0);
     }
+
 
     template <typename  T>
     T getRegByPos(int pos,string file){
@@ -362,6 +376,7 @@ public:
             Point _header;
             _header.setPost(0);
             _header.setFile(data_file);
+            _header.noDeletedEntries=true;
             _registro._id=_header;
             _registro._next.pos=-2; //es final tambien.
             InsertHeader(_header,data_file);
@@ -414,12 +429,12 @@ public:
                     if(_heapreg.noDeletedEntries){
                          obj=BinarySearchNear(_registro.nombre);
 
-                         obj=SequentialNearSearchFromPoint(_registro.nombre,obj._next);
+                         if(obj._next.pos!=-2){
+                            obj=SequentialNearSearchFromPoint(_registro.nombre,obj._next);
+                         }
                         
                     }else{
-                      
                          obj=SequentialNearSearchFromPoint(_registro.nombre,_heapreg);
-                    
                     }
 
                          _registro._next=obj._next;
