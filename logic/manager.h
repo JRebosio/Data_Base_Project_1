@@ -49,7 +49,7 @@ public:
         }
     }
 
-    T getRegbyPost(int pos){
+    T getRegByPos(int pos){
         ifstream outFile;
         T obj;
         outFile.open(file,ios::in| ios::out| ios::binary);
