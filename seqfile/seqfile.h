@@ -494,11 +494,15 @@ public:
             Registro obj=BinarySearchNear(key);
             if(obj.nombre==key){
                 if (obj._id.pos != hd.pos){
+                    
                     auto prev = getRegByPos<Registro>(obj._id.pos-1, data_file);
-                    hd.noDeletedEntries = false;
-                    InsertHeader(hd, data_file);
+                    // hd.noDeletedEntries = false;
+                    // InsertHeader(hd, data_file);
                     prev._next = obj._next;
                     UpdateRecord(prev);
+                }
+                else{
+                     hd=obj._next;
                 }
                 obj._next.pos=-1;
                 UpdateRecord(obj);  

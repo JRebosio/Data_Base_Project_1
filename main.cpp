@@ -13,22 +13,32 @@
 
 
 
-//     SequentialFile _file(data_file,aux_file);
+    // SequentialFile _file(data_file,aux_file);
 
-//     // Registro _reg1{"100","Jorge","CS",4};
-//     // _file.AddRecord(_reg1);
+    // Registro _reg1{"103","Andrea","CS",4};
+    // _file.AddRecord(_reg1);
     
-//     // Registro _reg2{"101","Luis","CS",1};
-//     // _file.AddRecord(_reg2);
+    // Registro _reg2{"104","Carlos","CS",1};
+    // _file.AddRecord(_reg2);
 
-//     //  Registro _reg3{"102","Carlos","CS",1};
-//     // _file.AddRecord(_reg3);
+    //  Registro _reg3{"105","Samuel","CS",1};
+    // _file.AddRecord(_reg3);
 
-//     Registro reg;
-//     bool _found=false;
-//     _found = _file.Search("Jorge",reg);
+
+    //  Registro _reg4{"105","Xad","CS",1};
+    // _file.AddRecord(_reg3);
+
+    // Registro _reg5{"105","Winter","CS",1};
+    // _file.AddRecord(_reg3);
+
+    // Registro reg6{"105","llama","CS",1};
+    // _file.AddRecord(_reg3);
+
+    // Registro reg;
+    // bool _found=false;
+    // _found = _file.Search("Jorge",reg);
     
-//     // regget2.showData();
+    // regget2.showData();
 
 
 //     return 0;
@@ -41,6 +51,26 @@ int main() {
     string data_file="data.txt";
     string aux_file="data_aux.txt";
     SequentialFile _file(data_file,aux_file);
+
+    Registro _reg1{"103","Andrea","CS",4};
+    _file.AddRecord(_reg1);
+    
+    Registro _reg2{"104","Carlos","CS",1};
+    _file.AddRecord(_reg2);
+
+     Registro _reg3{"105","Samuel","CS",1};
+    _file.AddRecord(_reg3);
+
+
+     Registro _reg4{"105","Xad","CS",1};
+    _file.AddRecord(_reg4);
+
+    Registro _reg5{"105","Winter","CS",1};
+    _file.AddRecord(_reg5);
+
+    Registro reg6{"105","llama","CS",1};
+    _file.AddRecord(reg6);
+
 
     cout<<"Bienvenido a la BD:"<<endl;
     while(opcion!=0) {
