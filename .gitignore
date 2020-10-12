@@ -1,6 +1,8 @@
-data_aux.txt
-data.txt
-main.exe
-.vscode/*.json
+*.txt
+*.exe
+*.o
+*.out
+.vscode/*
+.idea/*
 Makefile
 
