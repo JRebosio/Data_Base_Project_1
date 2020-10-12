@@ -44,6 +44,11 @@ public:
     Point _id;
     Point _next;
 
+    // Registro(string _codigo,string _nombre, string _carrera, int ciclo){
+       
+    //      this->ciclo=ciclo;
+    // }
+
     bool operator>(const Registro& d ) const{
         return string{nombre}>string{d.nombre};
     }

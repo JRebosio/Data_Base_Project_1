@@ -1,5 +1,6 @@
 #include "lib.h"
-#include "seqfile/seqfile.h"
+// #include "seqfile/seqfile.h"
+#include "tester/tester.h"
 
 void ui(SequentialFile _file){
     cout<<"Bienvenido a la BD:"<<endl;
@@ -56,33 +57,36 @@ void ui(SequentialFile _file){
 }
 
 int main() {
-    string data_file="data.txt";
-    string aux_file="data_aux.txt";
-    SequentialFile _file(data_file,aux_file);
-
-    Registro _reg1{"103","Andrea","CS",4}; //1
-    _file.AddRecord(_reg1);
     
-    Registro _reg2{"104","Carlos","CS",1}; //2
-    _file.AddRecord(_reg2);
+    Tester::execute();
 
-     Registro _reg3{"105","Samuel","CS",1}; //5
-    _file.AddRecord(_reg3);
+    // string data_file="data.txt";
+    // string aux_file="data_aux.txt";
+    // SequentialFile _file(data_file,aux_file);
 
-     Registro _reg4{"105","Xad","CS",1}; //7
-    _file.AddRecord(_reg4);
+    // Registro _reg1{"103","Andrea","CS",4}; //1
+    // _file.AddRecord(_reg1);
+    
+    // Registro _reg2{"104","Carlos","CS",1}; //2
+    // _file.AddRecord(_reg2);
 
-    Registro _reg5{"105","Winter","CS",1}; //6
-    _file.AddRecord(_reg5);
+    //  Registro _reg3{"105","Samuel","CS",1}; //5
+    // _file.AddRecord(_reg3);
 
-    Registro reg6{"105","Llama","CS",1}; //3
-    _file.AddRecord(reg6);
+    //  Registro _reg4{"105","Xad","CS",1}; //7
+    // _file.AddRecord(_reg4);
 
-    Registro reg7{"105","Nicolas","CS",1}; //4
-    _file.AddRecord(reg7);
+    // Registro _reg5{"105","Winter","CS",1}; //6
+    // _file.AddRecord(_reg5);
+
+    // Registro reg6{"105","Llama","CS",1}; //3
+    // _file.AddRecord(reg6);
+
+    // Registro reg7{"105","Nicolas","CS",1}; //4
+    // _file.AddRecord(reg7);
 
 
-    ui(_file);
+    // ui(_file);
 
     // cout<<"DATA FILE"<< endl;
     // cout<<"----------------------"<<endl;
@@ -93,5 +97,5 @@ int main() {
     // cout<<"----------------------"<<endl;
     // _file.scanAll(aux_file);
     
-    return 0;
+     return EXIT_SUCCESS;
 }
