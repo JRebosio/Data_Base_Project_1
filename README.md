@@ -1,5 +1,15 @@
 # Proyecto 1 DB2
 
+
+## Integrantes
+
+| Nombre y Apellidos | codigo de alumno |
+|-|-|
+|Victor Ostolaza | - |
+|Jorge Vásquez	| 201310292 |
+|Jorge Rebosio | - |
+
+
 ## Descripcion
 
 Hi! I'm your first Markdown file in **StackEdit**. If you want to learn about StackEdit, you can read me. If you want to play with Markdown, you can edit me. Once you have finished with me, you can create new files by opening the **file explorer** on the left corner of the navigation bar.
@@ -24,17 +34,17 @@ All your files and folders are presented as a tree in the file explorer. You can
 
 ### Insert
 
-All your files and folders are presented as a tree in the file explorer. You can switch from one to another by clicking a file in the tree.
+>All your files and folders are presented as a tree in the file explorer. You can switch from one to another by clicking a file in the tree.
 
 
 ### Search
 
-All your files and folders are presented as a tree in the file explorer. You can switch from one to another by clicking a file in the tree.
+>All your files and folders are presented as a tree in the file explorer. You can switch from one to another by clicking a file in the tree.
 
 
 ### Delete
 
-All your files and folders are presented as a tree in the file explorer. You can switch from one to another by clicking a file in the tree.
+>All your files and folders are presented as a tree in the file explorer. You can switch from one to another by clicking a file in the tree.
 
 
 
@@ -42,17 +52,17 @@ All your files and folders are presented as a tree in the file explorer. You can
 
 ### Insert
 
-All your files and folders are presented as a tree in the file explorer. You can switch from one to another by clicking a file in the tree.
+> All your files and folders are presented as a tree in the file explorer. You can switch from one to another by clicking a file in the tree.
 
 
 ### Search
 
-All your files and folders are presented as a tree in the file explorer. You can switch from one to another by clicking a file in the tree.
+> All your files and folders are presented as a tree in the file explorer. You can switch from one to another by clicking a file in the tree.
 
 
 ### Delete
 
-All your files and folders are presented as a tree in the file explorer. You can switch from one to another by clicking a file in the tree.
+> All your files and folders are presented as a tree in the file explorer. You can switch from one to another by clicking a file in the tree.
 
 
 
