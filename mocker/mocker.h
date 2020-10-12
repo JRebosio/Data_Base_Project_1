@@ -6,6 +6,7 @@
 #include <string>
 #include <fstream>
 #include <vector>
+#include <iostream>
 
 class Mocker{
 
@@ -26,12 +27,7 @@ public:
         }
         myFile.close();
       return _alldata;
-    }    
-
-
-
-
-
+    }
 
 
 };

@@ -1,25 +1,40 @@
 #include "tester.h"
 #include <iostream>
 #include <string>
+#include <chrono> 
 
 
-void Tester::execute(){
+void Tester::execute(bool vervose){
+
+
+    string ffile="tiempos.txt";
+    char _file[11];
+    strcpy(_file, ffile.c_str());
+
+    ofstream _cout;
+    _cout.open (_file, std::ofstream::out | std::ofstream::app);
 
     for(int i=0;i<NUMBER_OF_TESTS;i++){
         string file=std::to_string(i+1)+".txt";
-        std::cout<<file<<endl;
+        // std::cout<<file<<endl;
         string data="data"+file;
         string dataux="data_aux"+file;
         Mocker mock(file);
-        TestSeqFile<Registro>(mock.GetData(),data,dataux);
+        auto data_ = mock.GetData();
+        auto start = std::chrono::high_resolution_clock::now();
+        TestSeqFile<Registro>(data_,data,dataux, vervose);
+        auto stop = std::chrono::high_resolution_clock::now(); 
         cout << "Test[" << i + 1 << "] sucessful" << endl;
-
+        auto duration = std::chrono::duration_cast<std::chrono::seconds>(stop - start); 
+        _cout<<"Test[" << i + 1 << "]"<<"---"<<"Size: "<< data_.size()<<"---"<<"Duracion: "<<duration.count();
     }
+    _cout<<endl;
+    _cout.close();
 }
 
 
 template <typename T>
-void Tester::TestSeqFile(vector<string> elements,string data, string dataux){
+void Tester::TestSeqFile(vector<string> elements,string data, string dataux,bool vervose){
     //tomar tiempos.
     SequentialFile _file(data,dataux);
     for(int j=0;j<elements.size(); ++j) {
@@ -29,6 +44,35 @@ void Tester::TestSeqFile(vector<string> elements,string data, string dataux){
         strcpy(_tmp.carrera, "CS");
         strcpy(_tmp.codigo, "4");
         _file.AddRecord(_tmp);
+
+        if(vervose){
+            char file[11];
+            string ffile="output.txt";
+            strcpy(file, ffile.c_str());
+
+            ofstream cout;
+            cout.open (file, std::ofstream::out | std::ofstream::app);
+            cout<<"iteracion "<< j<<endl;
+            cout<<"DATA FILE"<< endl;
+            cout<<"----------------------"<<endl;
+            cout<<"Header"<<endl;
+            Point head=_file.GetHeader(data);
+            head.showData(cout);
+            cout<<"----------------------"<<endl;
+            cout<<"DATA"<<endl;
+            _file.scanAll(data,cout);
+            cout<<endl;
+            cout<<"AUX FILE" << endl;
+            cout<<"----------------------"<<endl;
+            cout<<"Header"<<endl;
+            Point _head=_file.GetHeader(dataux);
+            _head.showData(cout);
+            cout<<"----------------------"<<endl;
+            cout<<"DATA"<<endl;
+            _file.scanAll(dataux,cout);   
+            cout<<endl;
+            cout.close();
+        }
     }
 
 }

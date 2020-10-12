@@ -6,7 +6,7 @@
 #include <cstring>
 
 
-#define MAX_AUX 5
+#define MAX_AUX 20
 
 using namespace std;
 
@@ -28,6 +28,11 @@ struct Point{
             cout<<"\nFile: "<<file;
             cout<<"\nPos: "<<pos;
             cout<<endl;
+        }
+        void showData(ostream &stream){
+            stream<<"\nFile: "<<file;
+            stream<<"\nPos: "<<pos;
+            stream<<endl;
         }
 
 };
@@ -99,6 +104,18 @@ public:
         _next.showData();
         cout<<endl;
     }
+
+     void showData(ostream &stream){
+            stream<<"\nId:";
+            _id.showData(stream);
+            stream<<"\nCodigo: "<<codigo;
+            stream<<"\nNombre: "<<nombre;
+            stream<<"\nCarrera: "<<carrera;
+            stream<<"\nCiclo:"<<ciclo;
+            stream<<"\nNext:";
+            _next.showData(stream);
+            stream<<endl;
+        }
 
 };
 
@@ -210,7 +227,7 @@ private:
         Point header=GetHeader(data_file);
         auto aux_hd = GetHeader(aux_file);
         Registro obj = getRegByPos<Registro>(header.pos, header.file);
-        cout << "Initial record: " << obj.nombre << "   Next pos: " << obj._next.pos << endl;
+        // cout << "Initial record: " << obj.nombre << "   Next pos: " << obj._next.pos << endl;
         vector<Registro> records;
         int index = 0;
         
@@ -226,8 +243,8 @@ private:
             index++;
         }
         if (obj._id.file == aux_file){
-            aux_hd.pos = obj._id.pos;
             obj._next = aux_hd;
+            aux_hd.pos = obj._id.pos;
             UpdateRecord(obj);
         }
         records.push_back(obj);
@@ -267,17 +284,7 @@ private:
         }
     }
 
-    Point GetHeader(string file){
-        Point _header;
-        fstream outFile;
-        outFile.open(file,ios::in| ios::out| ios::binary);
-        if(outFile.is_open()){
-            outFile.seekg(0);
-            outFile.read((char* )&_header, sizeof(Point));
-            outFile.close();
-        }
-        return _header;
-    }
+   
 
 
     bool SequentialSearchPrev(string key, pair<Registro, Registro> &res){
@@ -314,6 +321,18 @@ public:
         this->aux_file=_aux_file;
     }
 
+     Point GetHeader(string file){
+        Point _header;
+        fstream outFile;
+        outFile.open(file,ios::in| ios::out| ios::binary);
+        if(outFile.is_open()){
+            outFile.seekg(0);
+            outFile.read((char* )&_header, sizeof(Point));
+            outFile.close();
+        }
+        return _header;
+    }
+
     bool Search(string key,Registro &tmp){
         if(!is_empty(data_file)){
             Point hd=GetHeader(data_file);         
@@ -346,9 +365,9 @@ public:
     }
 
     void AddRecord(Registro _registro){
-        cout << "Looking to insert record: " << _registro.nombre << endl;
+        // cout << "Looking to insert record: " << _registro.nombre << endl;
         if(is_empty(data_file)){
-            cout << "Datafile empty, inserting at top." << endl;
+            // cout << "Datafile empty, inserting at top." << endl;
             Point _header;
             _header.setPos(0);
             _header.setFile(data_file);
@@ -360,7 +379,7 @@ public:
         }
         else{
             if(is_empty(aux_file)){
-                cout << "Aux file empty, creating header." << endl;
+                // cout << "Aux file empty, creating header." << endl;
                 Point aux_hd;
                 aux_hd.setPos(-1);
                 aux_hd.setFile(aux_file);
@@ -369,7 +388,7 @@ public:
             }
             auto aux_hd = GetHeader(aux_file);
             if(aux_hd.size+1>MAX_AUX){
-                cout << "Rebuild data start" << endl;
+                // cout << "Rebuild data start" << endl;
                 RebuildData();
                 aux_hd = GetHeader(aux_file);
             }
@@ -379,7 +398,7 @@ public:
 
              if(first_rec > _registro)
             {
-                cout << _registro.nombre << " < " << first_rec.nombre << ", inserting at top." << endl;
+                // cout << _registro.nombre << " < " << first_rec.nombre << ", inserting at top." << endl;
                 // first_rec.showData();
                 _registro._next = first_rec._id;
                 _registro._id.setFile(aux_file);
@@ -387,14 +406,14 @@ public:
                 
                 if(aux_hd.pos == -1)
                 {
-                    cout << "No files deleted, adding via heapAdd on pos " << aux_hd.size << endl;
-                    _registro._id.pos = aux_hd.size;;
+                    // cout << "No files deleted, adding via heapAdd on pos " << aux_hd.size << endl;
+                    _registro._id.pos = aux_hd.size;
                     heapAdd(_registro);
                 }
                 else
                 {
                     Registro nextDel=getRegByPos<Registro>(aux_hd.pos,aux_hd.file);
-                    cout << "Inserting at position " << nextDel._id.pos << " as indicated by the aux header" << endl;;
+                    // cout << "Inserting at position " << nextDel._id.pos << " as indicated by the aux header" << endl;;
                     aux_hd.pos = nextDel._next.pos;
                     aux_hd.setFile(nextDel._next.file);
                     InsertHeader(aux_hd,aux_file);
@@ -410,20 +429,20 @@ public:
 
                 Registro obj;
                 if(header.noDeletedEntries){
-                    cout << "No deleted entries in datafile, performing binary search." << endl;
+                    // cout << "No deleted entries in datafile, performing binary search." << endl;
                     obj=BinarySearchNear(_registro.nombre);
-                    cout << "Closest record found: " << obj.nombre << endl;
+                    // cout << "Closest record found: " << obj.nombre << endl;
                     if(obj._next.pos!=-2){
-                        cout << "Performing sequential search" << endl;
+                        // cout << "Performing sequential search" << endl;
                         obj=SequentialNearSearchFromPoint(_registro.nombre,header);
-                        cout << "Closest record found: " << obj.nombre << endl;
+                        // cout << "Closest record found: " << obj.nombre << endl;
                     }
                     
                 }
                 else{
-                    cout << "Performing sequential search" << endl;
+                    // cout << "Performing sequential search" << endl;
                     obj=SequentialNearSearchFromPoint(_registro.nombre,header);
-                    cout << "Closest record found: " << obj.nombre << endl;                    
+                    // cout << "Closest record found: " << obj.nombre << endl;                    
                 }
                 _registro._next=obj._next;
                 _registro._id.setFile(aux_file);
@@ -443,7 +462,7 @@ public:
 
                 obj._next.setFile(aux_file);
                 obj._next.pos=_registro._id.pos;
-                cout << "Inserting " << _registro.nombre << " after " << obj.nombre << endl;
+                // cout << "Inserting " << _registro.nombre << " after " << obj.nombre << endl;
                 UpdateRecord(obj);          
                         
             }
@@ -590,7 +609,7 @@ public:
         return obj;
     }
 
-    void scanAll(string file) {
+    void scanAll(string file ,ostream &stream) {
         ifstream inFile;
         inFile.open(file, ios::binary);
         //read the first pointer
@@ -600,7 +619,7 @@ public:
         Registro obj;
         while (inFile.read((char *) &obj, sizeof(obj))) {
             // if (obj._next.pos !=-1)
-                obj.showData();
+                obj.showData(stream);
         }
         inFile.close();
     }

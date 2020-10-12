@@ -3,7 +3,7 @@
 
 
 
-#define NUMBER_OF_TESTS 1
+#define NUMBER_OF_TESTS 3
 
 #include "../lib.h"
 #include "../mocker/mocker.h"
@@ -13,10 +13,10 @@
 class Tester{
 
     template<typename T>
-    static void TestSeqFile(vector<string> _data,string data, string data_aux);
+    static void TestSeqFile(vector<string> _data,string data, string data_aux,bool vervose);
 
 public:
-    static void execute(); 
+    static void execute(bool vervose); 
 
 };
 

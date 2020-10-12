@@ -12,41 +12,41 @@
 
 ## Descripcion
 
-Hi! I'm your first Markdown file in **StackEdit**. If you want to learn about StackEdit, you can read me. If you want to play with Markdown, you can edit me. Once you have finished with me, you can create new files by opening the **file explorer** on the left corner of the navigation bar.
+En este proyecto se decidió realizar la implementacion de dos estructuras de datos para el mantenimiento de estos en disco. Los elegidos fueron el **Sequential File!** y el **B+Tree Clustered**
 
 
 ## Objetivos
 
-StackEdit stores your files in your browser, which means all your files are automatically saved locally and are accessible **offline!**
+- Implementar las funciones de **Insertar**,**Buscar**,**Eliminar** para cada estructura de datos. 
+- Realizar mediciones de desempeño en cada estructura y comparalos.
+- Diseñar una pequeña interface de comandos para la interaccion con los datos en disco.
+
 
 ## Resultados Esperados
 
-StackEdit stores your files in your browser, which means all your files are automatically saved locally and are accessible **offline!**
+Lo que esperamos es ver el funcionamiento práctico de las estructuras vistas en clase. Asimismo resolver las diferentes causistica que cada una presenta y finalmente comprobar que el **b+tree** es mucho mas eficiente que el **Sequential File**.
 
 # Fundamentos y técnicas de Indexación
 
-The file explorer is accessible using the button in left corner of the navigation bar. You can create a new file by clicking the **New file** button in the file explorer. You can also create folders by clicking the **New folder** button.
 
-## Sequention File
+## Sequential File
 
-All your files and folders are presented as a tree in the file explorer. You can switch from one to another by clicking a file in the tree.
+Consta de dos archivos. El primero **data.txt**, mantiene los datos ordenados fisicamente por un campo. El segundo **data_aux.txt**, espacio temporal donde se inserta de forma adyacente como vayan llegando y se mantiende ordenado por medio de un campo extra llamado puntero. Este archivo tiene un parametro MAX_AUX que indica la cantidad maxima que registro que tendra y una vez superado ese valor se restructura la data deacuerdo a los punteros.
 
 
 ### Insert
 
->All your files and folders are presented as a tree in the file explorer. You can switch from one to another by clicking a file in the tree.
+>Consiste en insertar todos los valores en el data_axu y solo cuando la cantidad de este sea igual a la cantidad máxima se restructura. La restructuración consiste en insertar nuevamente todos los resgistros usando una iteración lineal.Esta es posible gracias al **header**, el cual es un puntero que tiene como direccion el primer registro. Por otro lado,para insertar en el **data_axu** hemos considerado la logica del Free list, es decir que tenemos un header en dicho archivo que apunta a la posicion donde se debe insertar y mientras se va eliminando los registros ese puntero se actualiza como un **stack**.
 
 
 ### Search
 
->All your files and folders are presented as a tree in the file explorer. You can switch from one to another by clicking a file in the tree.
-
+>Debido a que el archivo **data.txt** se encuentra ordenado de manera fisica por un campo, se puede realizar una busqueda binaria sobre este.En caso que lo encuentra lo devuelte y si no significa que puede estar en el data aux, por ello la busqueda binaria siempre retornara el registro previo al que voy a insertar y posteriormente se hace una busqueda lineal por medio de los punteros.
+ 
 
 ### Delete
 
->All your files and folders are presented as a tree in the file explorer. You can switch from one to another by clicking a file in the tree.
-
-
+> Para eliminar en el *data.txt* debemos actualizar su puntero a -1 y como una linked list hacer que el anterior apunte al next de este.Mientras que el *data.axu* al eliminar un registro  se actualzia el *header_axu* con la direccion del valor a eliminar y a su vez ese valor debe tener como next el antiguo valor del *header_axu*.
 
 ## B+ tree Indexing
 
@@ -68,123 +68,57 @@ All your files and folders are presented as a tree in the file explorer. You can
 
 # Resultados Experimentales
 
-You can delete the current file by clicking the **Remove** button in the file explorer. The file will be moved into the **Trash** folder and automatically deleted after 7 days of inactivity.
+## Sequential File
+
+**k**=tamaño del aux file
+<br>
+**n**=tamaño del data file
+
+
+- Busqueda
+
+Mejor Caso  | Caso Promedio | Peor Caso
+------------- | ------------- | -------------
+$O(\log{}n)$  | $O(\log{}n)$ + $O(k)$  | $O(n)$
+
+- Insercion Aux File
+
+
+Mejor Caso  | Caso Promedio | Peor Caso
+------------- | ------------- | -------------
+$O(1)$  | $O(1)$  | $O(1)$
+
+
+- Insercion Data File
+
+Siempre  |
+------------- |
+$O(n)$  
+
+
+- Eliminacion
+
+Mejor Caso  | Caso Promedio | Peor Caso
+------------- | ------------- | -------------
+$O(\log{}n)$  | $O(\log{}n)$ + $O(k)$  | $O(n)$
+
+
+- Pruebas Funcionales Insercion
+
+| Test  | Size  | Time(seconds) |
+| :------------ |:---------------:| -----:|
+| 1     | 100 | 4 |
+| 2      | 500        |   52 |
+| 3 | 1000        |    230 |
+
+	-Obervar el archivo tiempos.txt
+
+
+
+
 
 # Pruebas de Uso
 
-You can export the current file by clicking **Export to disk** in the menu. You can choose to export the file as plain Markdown, as HTML using a Handlebars template or as a PDF.
+Mostrar la interface de consola
 
 
-# Synchronization
-
-Synchronization is one of the biggest features of StackEdit. It enables you to synchronize any file in your workspace with other files stored in your **Google Drive**, your **Dropbox** and your **GitHub** accounts. This allows you to keep writing on other devices, collaborate with people you share the file with, integrate easily into your workflow... The synchronization mechanism takes place every minute in the background, downloading, merging, and uploading file modifications.
-
-There are two types of synchronization and they can complement each other:
-
-- The workspace synchronization will sync all your files, folders and settings automatically. This will allow you to fetch your workspace on any other device.
-	> To start syncing your workspace, just sign in with Google in the menu.
-
-- The file synchronization will keep one file of the workspace synced with one or multiple files in **Google Drive**, **Dropbox** or **GitHub**.
-	> Before starting to sync files, you must link an account in the **Synchronize** sub-menu.
-
-## Open a file
-
-You can open a file from **Google Drive**, **Dropbox** or **GitHub** by opening the **Synchronize** sub-menu and clicking **Open from**. Once opened in the workspace, any modification in the file will be automatically synced.
-
-## Save a file
-
-You can save any file of the workspace to **Google Drive**, **Dropbox** or **GitHub** by opening the **Synchronize** sub-menu and clicking **Save on**. Even if a file in the workspace is already synced, you can save it to another location. StackEdit can sync one file with multiple locations and accounts.
-
-## Synchronize a file
-
-Once your file is linked to a synchronized location, StackEdit will periodically synchronize it by downloading/uploading any modification. A merge will be performed if necessary and conflicts will be resolved.
-
-If you just have modified your file and you want to force syncing, click the **Synchronize now** button in the navigation bar.
-
-> **Note:** The **Synchronize now** button is disabled if you have no file to synchronize.
-
-## Manage file synchronization
-
-Since one file can be synced with multiple locations, you can list and manage synchronized locations by clicking **File synchronization** in the **Synchronize** sub-menu. This allows you to list and remove synchronized locations that are linked to your file.
-
-
-# Publication
-
-Publishing in StackEdit makes it simple for you to publish online your files. Once you're happy with a file, you can publish it to different hosting platforms like **Blogger**, **Dropbox**, **Gist**, **GitHub**, **Google Drive**, **WordPress** and **Zendesk**. With [Handlebars templates](http://handlebarsjs.com/), you have full control over what you export.
-
-> Before starting to publish, you must link an account in the **Publish** sub-menu.
-
-## Publish a File
-
-You can publish your file by opening the **Publish** sub-menu and by clicking **Publish to**. For some locations, you can choose between the following formats:
-
-- Markdown: publish the Markdown text on a website that can interpret it (**GitHub** for instance),
-- HTML: publish the file converted to HTML via a Handlebars template (on a blog for example).
-
-## Update a publication
-
-After publishing, StackEdit keeps your file linked to that publication which makes it easy for you to re-publish it. Once you have modified your file and you want to update your publication, click on the **Publish now** button in the navigation bar.
-
-> **Note:** The **Publish now** button is disabled if your file has not been published yet.
-
-## Manage file publication
-
-Since one file can be published to multiple locations, you can list and manage publish locations by clicking **File publication** in the **Publish** sub-menu. This allows you to list and remove publication locations that are linked to your file.
-
-
-# Markdown extensions
-
-StackEdit extends the standard Markdown syntax by adding extra **Markdown extensions**, providing you with some nice features.
-
-> **ProTip:** You can disable any **Markdown extension** in the **File properties** dialog.
-
-
-## SmartyPants
-
-SmartyPants converts ASCII punctuation characters into "smart" typographic punctuation HTML entities. For example:
-
-|                |ASCII                          |HTML                         |
-|----------------|-------------------------------|-----------------------------|
-|Single backticks|`'Isn't this fun?'`            |'Isn't this fun?'            |
-|Quotes          |`"Isn't this fun?"`            |"Isn't this fun?"            |
-|Dashes          |`-- is en-dash, --- is em-dash`|-- is en-dash, --- is em-dash|
-
-
-## KaTeX
-
-You can render LaTeX mathematical expressions using [KaTeX](https://khan.github.io/KaTeX/):
-
-The *Gamma function* satisfying $\Gamma(n) = (n-1)!\quad\forall n\in\mathbb N$ is via the Euler integral
-
-$$
-\Gamma(z) = \int_0^\infty t^{z-1}e^{-t}dt\,.
-$$
-
-> You can find more information about **LaTeX** mathematical expressions [here](http://meta.math.stackexchange.com/questions/5020/mathjax-basic-tutorial-and-quick-reference).
-
-
-## UML diagrams
-
-You can render UML diagrams using [Mermaid](https://mermaidjs.github.io/). For example, this will produce a sequence diagram:
-
-```mermaid
-sequenceDiagram
-Alice ->> Bob: Hello Bob, how are you?
-Bob-->>John: How about you John?
-Bob--x Alice: I am good thanks!
-Bob-x John: I am good thanks!
-Note right of John: Bob thinks a long<br/>long time, so long<br/>that the text does<br/>not fit on a row.
-
-Bob-->Alice: Checking with John...
-Alice->John: Yes... John, how are you?
-```
-
-And this will produce a flow chart:
-
-```mermaid
-graph LR
-A[Square Rect] -- Link text --> B((Circle))
-A --> C(Round Rect)
-B --> D{Rhombus}
-C --> D
-```

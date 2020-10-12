@@ -58,11 +58,13 @@ void ui(SequentialFile _file){
 
 int main() {
     
-    Tester::execute();
+    Tester::execute(false);
+    
 
-    // string data_file="data.txt";
-    // string aux_file="data_aux.txt";
+    // string data_file="data1.txt";
+    // string aux_file="data_aux1.txt";
     // SequentialFile _file(data_file,aux_file);
+    // ui(_file);
 
     // Registro _reg1{"103","Andrea","CS",4}; //1
     // _file.AddRecord(_reg1);
@@ -86,7 +88,7 @@ int main() {
     // _file.AddRecord(reg7);
 
 
-    // ui(_file);
+  
 
     // cout<<"DATA FILE"<< endl;
     // cout<<"----------------------"<<endl;
