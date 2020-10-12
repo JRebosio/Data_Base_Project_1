@@ -106,9 +106,6 @@ private:
         return obj;
     }
 
-
-    
-
      void heapAdd(Registro _reg){
         fstream outFile;
         outFile.open(_reg._id.file,ios::in| ios::out| ios::binary);
@@ -184,39 +181,68 @@ private:
 
     void RebuildData(){
 
-        vector<Registro> _registro;
         Point _heapreg=GetHeader(data_file);
-        Registro regtemp=getRegByPos<Registro>(_heapreg.pos,_heapreg.file);
-        _registro.push_back(regtemp);
-
-        int data_file_size=get_size(data_file);
-        int aux_file_size=get_size(aux_file);
+        auto aux_hd = GetHeader(aux_file);
+        Registro obj = getRegByPos<Registro>(_heapreg.pos, _heapreg.file);
+        int index = 0;
         
-        int count=1;
-        while(count<data_file_size+aux_file_size){
-            Registro next=getNext(regtemp);
-            _registro.push_back(next);
-            regtemp=next;
-            count++;
-        }
-        for(auto it=_registro.begin();it<_registro.end();it++){
-            int index = std::distance(_registro.begin(), it);
-            Registro _tmi=*(it);
-            _tmi._id.pos=index;
-            _tmi._id.setFile(data_file);
-            if(it+1==_registro.end()){
-                _tmi._next.pos=-2;
-            } else{
-                _tmi._next.pos=index+1;
-                _tmi._next.setFile(data_file);
+        while (obj._next.pos != -2){
+            auto next = getNext(obj);
+
+            if (obj._id.file == aux_file){
+                aux_hd.pos = obj._id.pos;
+                aux_hd.size--;
+                obj._next = aux_hd;
+                UpdateRecord(obj);
+                InsertHeader(aux_hd, aux_file);
             }
-            WriteInPos<Registro>(data_file,_tmi,index);
+            
+            obj._id.pos = index;
+            obj._id.setFile(data_file);
+            obj._next.pos = index+1;
+            obj._next.setFile(data_file);
+            
+            WriteInPos(data_file, obj, index);
+            obj = next;
+            index++;
         }
-        //  CleanFile(aux_file);
+        obj._id.pos = index;
+        obj._id.setFile(data_file);
+        WriteInPos(data_file, obj, index);
+
         _heapreg.pos=0;
         _heapreg.noDeletedEntries = true;
         _heapreg.setFile(data_file);
-         InsertHeader(_heapreg,data_file);
+        InsertHeader(_heapreg,data_file);
+
+        // Registro regtemp=getRegByPos<Registro>(_heapreg.pos,_heapreg.file);
+        // _registro.push_back(regtemp);
+
+        // int data_file_size=get_size(data_file);
+        // int aux_file_size=get_size(aux_file);
+        // int count=1;
+        // while(count<data_file_size+aux_file_size){
+        //     Registro next=getNext(regtemp);
+        //     _registro.push_back(next);
+        //     regtemp=next;
+        //     count++;
+        // }
+        // for(auto it=_registro.begin();it<_registro.end();it++){
+        //     int index = std::distance(_registro.begin(), it);
+        //     Registro _tmi=*(it);
+        //     _tmi._id.pos=index;
+        //     _tmi._id.setFile(data_file);
+        //     if(it+1==_registro.end()){
+        //         _tmi._next.pos=-2;
+        //     } else{
+        //         _tmi._next.pos=index+1;
+        //         _tmi._next.setFile(data_file);
+        //     }
+        //     WriteInPos<Registro>(data_file,_tmi,index);
+        // }
+        
+        //  CleanFile(aux_file);
+        
     }
 
     void UpdateRecord(Registro _reg){
@@ -249,7 +275,7 @@ private:
     bool SequentialSearchPrev(string key, pair<Registro, Registro> &res){
         Point hd = GetHeader(data_file);
         res.first = getRegByPos<Registro>(hd.pos, hd.file);
-        while(res.first._next.pos!=-2){
+        while(res.first._id.pos!=-2){
             if(res.first.nombre==key)
                 return true;
             else {
@@ -262,7 +288,7 @@ private:
 
     bool SequentialSearchFromPoint(string key, Point next, pair<Registro, Registro> &res){
         res.first = getRegByPos<Registro>(next.pos, next.file);
-        while(res.first._next.pos!=-2){
+        while(res.first._id.pos!=-2){
             if(res.first.nombre==key)
                 return true;
             else {
@@ -279,22 +305,6 @@ public:
     SequentialFile(string _data_file,string _aux_file){
         this->data_file=_data_file;
         this->aux_file=_aux_file;
-    }
-
-
-     void scanAll(string file) {
-        ifstream inFile;
-        inFile.open(file, ios::binary);
-        //read the first pointer
-        Point delPointer;
-        inFile.read((char *) &delPointer, sizeof(Point));
-        //read the records
-        Registro obj;
-        while (inFile.read((char *) &obj, sizeof(obj))) {
-            if (obj._next.pos !=-1)
-                obj.showData();
-        }
-        inFile.close();
     }
 
 
@@ -408,18 +418,14 @@ public:
                   Point _auxHeader;
                   _auxHeader.setPost(-1);
                   _auxHeader.setFile(aux_file);
+                  _auxHeader.size = 0;
                   InsertHeader(_auxHeader,aux_file);
              }
-             int aux_size=get_size(aux_file);
-             if(aux_size+1>MAX_AUX){
+            auto aux_hd = GetHeader(aux_file);
+             if(aux_hd.size+1>MAX_AUX){
                 RebuildData();
-                aux_size=0;
              }
 
-             int data_size=get_size(data_file);
-             int aux_file_size=aux_size;
-             
-             Point _headeraxu=GetHeader(aux_file);
              Point _heapreg=GetHeader(data_file);
              Registro _firtsreg=getRegByPos<Registro>(_heapreg.pos,_heapreg.file);
 
@@ -429,54 +435,56 @@ public:
                     _registro._id.setFile(aux_file);
                    
                     
-                    if(_headeraxu.pos=-1)
+                    if(aux_hd.pos=-1)
                     {
-                         _registro._id.pos=aux_file_size;
+                         _registro._id.pos= aux_hd.size;;
                         heapAdd(_registro);
                     }
                     else
                     {
-                        Registro _nexdel=getRegByPos<Registro>(_headeraxu.pos,_headeraxu.file);
+                        Registro _nexdel=getRegByPos<Registro>(aux_hd.pos,aux_hd.file);
                         InsertHeader(_nexdel._next,aux_file);
-                         _registro._id.pos=_headeraxu.pos;
-                        WriteInPos(aux_file,_registro,_headeraxu.pos);
+                         _registro._id.pos=aux_hd.pos;
+                        WriteInPos(aux_file,_registro,aux_hd.pos);
                     }
                 }
             
             else{
 
-                    Registro obj;
-                    if(_heapreg.noDeletedEntries){
-                         obj=BinarySearchNear(_registro.nombre);
+                Registro obj;
+                if(_heapreg.noDeletedEntries){
+                        obj=BinarySearchNear(_registro.nombre);
 
-                         if(obj._next.pos!=-2){
-                            obj=SequentialNearSearchFromPoint(_registro.nombre,obj._next);
-                         }
-                        
-                    }else{
-                         obj=SequentialNearSearchFromPoint(_registro.nombre,_heapreg);
-                    }
-
-                         _registro._next=obj._next;
-                         _registro._id.setFile(aux_file);
-
-                         if(_headeraxu.pos==-1){
-                             _registro._id.pos=aux_file_size;
-                            heapAdd(_registro);
-                         }
-                         else{
-                            //el que esta en header
-                            Registro _nexdel=getRegByPos<Registro>(_headeraxu.pos,_headeraxu.file);
-                            // insertar el nuevo header;
-                            InsertHeader(_nexdel._next,aux_file);
-                            _registro._id.pos=_headeraxu.pos;
-                            WriteInPos(aux_file,_registro,_headeraxu.pos);
+                        if(obj._next.pos!=-2){
+                        obj=SequentialNearSearchFromPoint(_registro.nombre,obj._next);
                         }
-                        obj._next.setFile(aux_file);
-                        obj._next.pos=_registro._id.pos;
-                        UpdateRecord(obj);          
-                        
+                    
+                }else{
+                        obj=SequentialNearSearchFromPoint(_registro.nombre,_heapreg);
+                }
+
+                        _registro._next=obj._next;
+                        _registro._id.setFile(aux_file);
+
+                        if(aux_hd.pos==-1){
+                            _registro._id.pos=aux_hd.size;
+                        heapAdd(_registro);
+                        }
+                        else{
+                        //el que esta en header
+                        Registro _nexdel=getRegByPos<Registro>(aux_hd.pos,aux_hd.file);
+                        // insertar el nuevo header;
+                        InsertHeader(_nexdel._next,aux_file);
+                        _registro._id.pos=aux_hd.pos;
+                        WriteInPos(aux_file,_registro,aux_hd.pos);
                     }
+                    obj._next.setFile(aux_file);
+                    obj._next.pos=_registro._id.pos;
+                    UpdateRecord(obj);          
+                        
+            }
+            aux_hd.size++;
+            InsertHeader(aux_hd, aux_file);
           }
     }
 
@@ -491,13 +499,16 @@ public:
 
 
     void updateDeletion(pair<Registro, Registro> res){
-        res.second._next = res.first._next;
-        UpdateRecord(res.second);
-        
+        auto hd = GetHeader(data_file);
+        if (res.first._id.pos != hd.pos){
+            res.second._next = res.first._next;
+            UpdateRecord(res.second);
+        }
         if (res.first._id.file == aux_file){
             Point aux_hd = GetHeader(aux_file);
             res.first._next = aux_hd;
             aux_hd = res.first._id;
+            aux_hd.size--;
             InsertHeader(aux_hd, aux_file);
         }
         else
@@ -613,6 +624,21 @@ public:
             }
         } 
         return obj;
+    }
+
+    void scanAll(string file) {
+        ifstream inFile;
+        inFile.open(file, ios::binary);
+        //read the first pointer
+        Point delPointer;
+        inFile.read((char *) &delPointer, sizeof(Point));
+        //read the records
+        Registro obj;
+        while (inFile.read((char *) &obj, sizeof(obj))) {
+            if (obj._next.pos !=-1)
+                obj.showData();
+        }
+        inFile.close();
     }
 
    
