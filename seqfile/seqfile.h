@@ -212,8 +212,8 @@ private:
             auto next = getNext(obj);
 
             if (obj._id.file == aux_file){
-                aux_hd.pos = obj._id.pos;
                 obj._next = aux_hd;
+                aux_hd.pos = obj._id.pos;
                 UpdateRecord(obj);
             }
             
@@ -226,8 +226,11 @@ private:
             obj = next;
             index++;
         }
-        if (obj._id.file == aux_file)
+        if (obj._id.file == aux_file){
+            obj._next = aux_hd;
+            UpdateRecord(obj);
             aux_hd.pos = obj._id.pos;
+        }
         obj._id.pos = index;
         obj._id.setFile(data_file);
         WriteInPos(data_file, obj, index);
@@ -392,24 +395,20 @@ public:
         if(!is_empty(data_file)){
             Point hd=GetHeader(data_file);         
             if   (hd.noDeletedEntries) {
-                cout << "No deleted entries, performing BinarySearchNear. Size of datafile: " << get_size(data_file) << endl;
                 Registro obj = BinarySearchNear(key);
-                cout << "Nearest obj: " << obj.nombre << "  Nearest pos: " << obj._id.pos << endl;
                 if (obj==key)
                     {
                         tmp=obj;
                         return true;
                      }
                 else{
-                        cout << "Couldn't find record in datafile, starting sequential search from " << obj._id.pos << endl;
-                        Registro _seq = SequentialNearSearchFromPoint(key, hd);
-                        cout << "Nearest obj: " << _seq.nombre << "  Nearest pos: " << _seq._id.pos << endl;
-                        if(_seq==key)
-                        {
-                                tmp=_seq;
-                                return true;
-                        }
-                            return false;
+                    Registro _seq = SequentialNearSearchFromPoint(key, hd);
+                    if(_seq==key)
+                    {
+                            tmp=_seq;
+                            return true;
+                    }
+                        return false;
                     }
             }
             else{
@@ -486,13 +485,11 @@ public:
 
                         if(obj._next.pos!=-2){
                             obj=SequentialNearSearchFromPoint(_registro.nombre,_heapreg);
-                            cout << "Sequential search nearest result for " << _registro.nombre << ": " << obj.nombre<<endl;
                         }
                     
                 }else{
                         obj=SequentialNearSearchFromPoint(_registro.nombre,_heapreg);
                 }
-                    cout << "Inserting " << _registro.nombre << " after " << obj.nombre << endl;
                     _registro._next=obj._next;
                     _registro._id.setFile(aux_file);
 
@@ -552,7 +549,6 @@ public:
         Point hd = GetHeader(data_file);
         
         if (hd.file == data_file && hd.noDeletedEntries){
-            cout << "No deberia entrar aca" << endl;
             Registro obj=BinarySearchNear(key);
             if(obj.nombre==key){
                 if (obj._id.pos != hd.pos){
@@ -585,7 +581,6 @@ public:
         else{
             pair<Registro, Registro> res;
             if (SequentialSearchPrev(key, res)){
-                cout << "Succesful sequential search" << endl;
                 updateDeletion(res);   
                 hd.noDeletedEntries = false;
                 InsertHeader(hd, data_file);
@@ -616,24 +611,20 @@ public:
 
 
      Registro SequentialNearSearchFromPoint(string key, Point next){
-        cout << "Looking to insert " << key << endl;
         Registro obj = getRegByPos<Registro>(next.pos, next.file);
         Registro prev = obj;
         while(obj._next.pos!=-2){
             if(obj == key)
                 return obj;
             else if (obj > key){
-                cout << "Found entry " << obj.nombre << " > " << key << ". Returning " << prev.nombre << endl;
                 return prev;}
             else {
                 prev = obj;
                 obj=getNext(obj);
             }
         }
-        if (obj > key){
-            cout << "Found entry " << obj.nombre << " > " << key << ". Returning " << prev.nombre << endl;
-            return prev;}
-        cout << "Got to the end of list, returning last element: " << obj.nombre << endl;
+        if (obj > key)
+            return prev;
         return obj;
     }
 
