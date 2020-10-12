@@ -635,15 +635,11 @@ public:
         //read the records
         Registro obj;
         while (inFile.read((char *) &obj, sizeof(obj))) {
-            if (obj._next.pos !=-1)
+            // if (obj._next.pos !=-1)
                 obj.showData();
         }
         inFile.close();
     }
-
-   
-
-
 
 
     

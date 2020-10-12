@@ -81,7 +81,8 @@ int main() {
     Registro reg7{"105","Nicolas","CS",1}; //4
     _file.AddRecord(reg7);
 
-    ui(_file);
+    _file.scanAll(data_file);
+    _file.scanAll(aux_file);
     
     return 0;
 }
