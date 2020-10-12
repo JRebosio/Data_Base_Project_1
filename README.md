@@ -1,29 +1,66 @@
-# Welcome to StackEdit!
+# Proyecto 1 DB2
+
+## Descripcion
 
 Hi! I'm your first Markdown file in **StackEdit**. If you want to learn about StackEdit, you can read me. If you want to play with Markdown, you can edit me. Once you have finished with me, you can create new files by opening the **file explorer** on the left corner of the navigation bar.
 
 
-# Files
+## Objetivos
 
 StackEdit stores your files in your browser, which means all your files are automatically saved locally and are accessible **offline!**
 
-## Create files and folders
+## Resultados Esperados
+
+StackEdit stores your files in your browser, which means all your files are automatically saved locally and are accessible **offline!**
+
+# Fundamentos y técnicas de Indexación
 
 The file explorer is accessible using the button in left corner of the navigation bar. You can create a new file by clicking the **New file** button in the file explorer. You can also create folders by clicking the **New folder** button.
 
-## Switch to another file
+## Sequention File
 
 All your files and folders are presented as a tree in the file explorer. You can switch from one to another by clicking a file in the tree.
 
-## Rename a file
 
-You can rename the current file by clicking the file name in the navigation bar or by clicking the **Rename** button in the file explorer.
+### Insert
 
-## Delete a file
+All your files and folders are presented as a tree in the file explorer. You can switch from one to another by clicking a file in the tree.
+
+
+### Search
+
+All your files and folders are presented as a tree in the file explorer. You can switch from one to another by clicking a file in the tree.
+
+
+### Delete
+
+All your files and folders are presented as a tree in the file explorer. You can switch from one to another by clicking a file in the tree.
+
+
+
+## B+ tree Indexing
+
+### Insert
+
+All your files and folders are presented as a tree in the file explorer. You can switch from one to another by clicking a file in the tree.
+
+
+### Search
+
+All your files and folders are presented as a tree in the file explorer. You can switch from one to another by clicking a file in the tree.
+
+
+### Delete
+
+All your files and folders are presented as a tree in the file explorer. You can switch from one to another by clicking a file in the tree.
+
+
+
+# Resultados Experimentales
 
 You can delete the current file by clicking the **Remove** button in the file explorer. The file will be moved into the **Trash** folder and automatically deleted after 7 days of inactivity.
 
-## Export a file
+# Pruebas de Uso
 
 You can export the current file by clicking **Export to disk** in the menu. You can choose to export the file as plain Markdown, as HTML using a Handlebars template or as a PDF.
 
