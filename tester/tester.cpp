@@ -25,7 +25,7 @@ void Tester::execute(bool vervose){
         TestSeqFile<Registro>(data_,data,dataux, vervose);
         auto stop = std::chrono::high_resolution_clock::now(); 
         cout << "Test[" << i + 1 << "] sucessful" << endl;
-        auto duration = std::chrono::duration_cast<std::chrono::seconds>(stop - start); 
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start); 
         _cout<<"Test[" << i + 1 << "]"<<"---"<<"Size: "<< data_.size()<<"---"<<"Duracion: "<<duration.count();
     }
     _cout<<endl;

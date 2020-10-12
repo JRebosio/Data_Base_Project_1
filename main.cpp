@@ -61,8 +61,8 @@ int main() {
     Tester::execute(false);
     
 
-    // string data_file="data1.txt";
-    // string aux_file="data_aux1.txt";
+    // string data_file="data3.txt";
+    // string aux_file="data_aux3.txt";
     // SequentialFile _file(data_file,aux_file);
     // ui(_file);
 

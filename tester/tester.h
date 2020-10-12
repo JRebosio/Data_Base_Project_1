@@ -3,7 +3,7 @@
 
 
 
-#define NUMBER_OF_TESTS 3
+#define NUMBER_OF_TESTS 5
 
 #include "../lib.h"
 #include "../mocker/mocker.h"
