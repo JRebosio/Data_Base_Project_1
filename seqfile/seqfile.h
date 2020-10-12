@@ -360,18 +360,18 @@ public:
                 aux_hd = GetHeader(aux_file);
             }
 
-            Point _heapreg=GetHeader(data_file);
-            Registro _firtsreg=getRegByPos<Registro>(_heapreg.pos,_heapreg.file);
+            Point header = GetHeader(data_file);
+            Registro first_rec = getRegByPos<Registro>(header.pos,header.file);
 
-             if(_firtsreg>_registro)
+             if(first_rec > _registro)
             {
-                _registro._next=_firtsreg._id;
+                _registro._next = first_rec._id;
                 _registro._id.setFile(aux_file);
             
                 
-                if(aux_hd.pos=-1)
+                if(aux_hd.pos = -1)
                 {
-                    _registro._id.pos= aux_hd.size;;
+                    _registro._id.pos = aux_hd.size;;
                     heapAdd(_registro);
                 }
                 else
@@ -388,36 +388,39 @@ public:
             else{
 
                 Registro obj;
-                if(_heapreg.noDeletedEntries){
-                        obj=BinarySearchNear(_registro.nombre);
+                if(header.noDeletedEntries){
+                    obj=BinarySearchNear(_registro.nombre);
 
-                        if(obj._next.pos!=-2){
-                            obj=SequentialNearSearchFromPoint(_registro.nombre,_heapreg);
-                        }
+                    if(obj._next.pos!=-2){
+                        obj=SequentialNearSearchFromPoint(_registro.nombre,header);
+                    }
                     
-                }else{
-                        obj=SequentialNearSearchFromPoint(_registro.nombre,_heapreg);
                 }
-                    _registro._next=obj._next;
-                    _registro._id.setFile(aux_file);
+                else
+                    obj=SequentialNearSearchFromPoint(_registro.nombre,header);
+                
+                _registro._next=obj._next;
+                _registro._id.setFile(aux_file);
 
-                    if(aux_hd.pos==-1){
-                        _registro._id.pos=aux_hd.size;
+                if(aux_hd.pos==-1){
+                    _registro._id.pos=aux_hd.size;
                     heapAdd(_registro);
-                    }
-                    else{
-                        Registro nextDel=getRegByPos<Registro>(aux_hd.pos,aux_hd.file);
-                        _registro._id.pos=aux_hd.pos;
-                        aux_hd.pos = nextDel._next.pos;
-                        aux_hd.setFile(nextDel._next.file);
-                        InsertHeader(aux_hd,aux_file);
-                        WriteInPos(nextDel._id.file, _registro, nextDel._id.pos);
-                    }
-                    obj._next.setFile(aux_file);
-                    obj._next.pos=_registro._id.pos;
-                    UpdateRecord(obj);          
+                }
+                else{
+                    Registro nextDel=getRegByPos<Registro>(aux_hd.pos,aux_hd.file);
+                    _registro._id.pos=aux_hd.pos;
+                    aux_hd.pos = nextDel._next.pos;
+                    aux_hd.setFile(nextDel._next.file);
+                    InsertHeader(aux_hd,aux_file);
+                    WriteInPos(nextDel._id.file, _registro, nextDel._id.pos);
+                }
+
+                obj._next.setFile(aux_file);
+                obj._next.pos=_registro._id.pos;
+                UpdateRecord(obj);          
                         
             }
+
             aux_hd.size++;
             InsertHeader(aux_hd, aux_file);
           }
@@ -460,16 +463,13 @@ public:
             Registro obj=BinarySearchNear(key);
             if(obj.nombre==key){
                 if (obj._id.pos != hd.pos){
-                    
                     auto prev = getRegByPos<Registro>(obj._id.pos-1, data_file);
-                    // hd.noDeletedEntries = false;
-                    // InsertHeader(hd, data_file);
                     prev._next = obj._next;
                     UpdateRecord(prev);
                 }
-                else{
+                else
                      hd=obj._next;
-                }
+
                 obj._next.pos=-1;
                 UpdateRecord(obj);  
                 hd.noDeletedEntries = false;
@@ -518,7 +518,7 @@ public:
 
 
 
-     Registro SequentialNearSearchFromPoint(string key, Point next){
+    Registro SequentialNearSearchFromPoint(string key, Point next){
         Registro obj = getRegByPos<Registro>(next.pos, next.file);
         Registro prev = obj;
         while(obj._next.pos!=-2){
@@ -578,8 +578,6 @@ public:
         inFile.close();
     }
 
-
-    
 };
 
 
