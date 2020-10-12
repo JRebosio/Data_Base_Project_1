@@ -81,7 +81,14 @@ int main() {
     Registro reg7{"105","Nicolas","CS",1}; //4
     _file.AddRecord(reg7);
 
+
+    cout<<"DATA FILE"<<end;
+    cout<<"----------------------"<<endl;
+
     _file.scanAll(data_file);
+
+    cout<<"AUX FILE"<<end;
+    cout<<"----------------------"<<endl;
     _file.scanAll(aux_file);
     
     return 0;
