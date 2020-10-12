@@ -3,53 +3,13 @@
 #include "seqfile/seqfile.h"
 
 
-// int main (){
+int main (){
 
-//     string data_file="data.txt";
-//     string aux_file="data_aux.txt";
+    string data_file="data.txt";
+    string aux_file="data_aux.txt";
 
    
 
-
-
-
-    // SequentialFile _file(data_file,aux_file);
-
-    // Registro _reg1{"103","Andrea","CS",4};
-    // _file.AddRecord(_reg1);
-    
-    // Registro _reg2{"104","Carlos","CS",1};
-    // _file.AddRecord(_reg2);
-
-    //  Registro _reg3{"105","Samuel","CS",1};
-    // _file.AddRecord(_reg3);
-
-
-    //  Registro _reg4{"105","Xad","CS",1};
-    // _file.AddRecord(_reg3);
-
-    // Registro _reg5{"105","Winter","CS",1};
-    // _file.AddRecord(_reg3);
-
-    // Registro reg6{"105","llama","CS",1};
-    // _file.AddRecord(_reg3);
-
-    // Registro reg;
-    // bool _found=false;
-    // _found = _file.Search("Jorge",reg);
-    
-    // regget2.showData();
-
-
-//     return 0;
-// }
-
-
-
-int main() {
-    int opcion = -1;
-    string data_file="data.txt";
-    string aux_file="data_aux.txt";
     SequentialFile _file(data_file,aux_file);
 
     Registro _reg1{"103","Andrea","CS",4};
@@ -61,67 +21,108 @@ int main() {
      Registro _reg3{"105","Samuel","CS",1};
     _file.AddRecord(_reg3);
 
-
      Registro _reg4{"105","Xad","CS",1};
     _file.AddRecord(_reg4);
 
-    Registro _reg5{"105","Winter","CS",1};
-    _file.AddRecord(_reg5);
-
-    Registro reg6{"105","llama","CS",1};
-    _file.AddRecord(reg6);
+      Registro _reg4{"105","Winter","CS",1};
+    _file.AddRecord(_reg4);
 
 
-    cout<<"Bienvenido a la BD:"<<endl;
-    while(opcion!=0) {
-        cout << "Menu de Acciones: " << "\n";
-        cout << "1. Insertar Registro" << "\n";
-        cout << "2. Buscar Registro" << "\n";
-        cout << "3. Eliminar Registro" << "\n";
-        // cout << "4. Listar Todos"<<"\n";
-        cout << "0. Salir" << "\n";
-        cout<<"Seleccione opcion: "<<"\n";
-        cin>>opcion;
+    cout<<"Data File"<<endl;
+    cout<<"---------------"<<endl;
+    _file.scanAll(data_file);
+    cout<<"Aux File"<<endl;
+    cout<<"---------------"<<endl;
+    _file.scanAll(aux_file);
 
-        string key="";
-        bool _found=false;
-        bool _delete=false;
-        
-        switch (opcion){
-            case 1:
-                //Encriptar
-                Registro reg;
-                reg.setData();
-                _file.AddRecord(reg);
-                cout<<"Se inserto correctamente"<<endl;
-                break;
-            case 2:
-                //Desencriptar
-                cout<<"Ingresa key a buscar: ";
-                cin>>key;
-                Registro _reg;
-                _found=_file.Search(key,_reg);
-                if(_found){
-                    _reg.showData();
-                }
-                else{
-                    cout<<"No se encontro el registro"<<endl;
-                }
-                break;
-            case 3:
-                cout<<"Ingresa key a eliminar: ";
-                cin>>key;
-                _delete=_file.DeleteRecord(key);
-                if(_delete)
-                {
-                    cout<<"Se elimino correctamente"<<endl;
-                }
-                else{
-                    cout<<"No se encontro el registro"<<endl;
-                }
-                break;
-        }
-    }
+    // Registro reg;
+    // bool _found=false;
+    // _found = _file.Search("Jorge",reg);
+    
+    // regget2.showData();
+
 
     return 0;
 }
+
+
+
+// int main() {
+//     int opcion = -1;
+//     string data_file="data.txt";
+//     string aux_file="data_aux.txt";
+//     SequentialFile _file(data_file,aux_file);
+
+//     Registro _reg1{"103","Andrea","CS",4};
+//     _file.AddRecord(_reg1);
+    
+//     Registro _reg2{"104","Carlos","CS",1};
+//     _file.AddRecord(_reg2);
+
+//      Registro _reg3{"105","Samuel","CS",1};
+//     _file.AddRecord(_reg3);
+
+
+//      Registro _reg4{"105","Xad","CS",1};
+//     _file.AddRecord(_reg4);
+
+//     Registro _reg5{"105","Winter","CS",1};
+//     _file.AddRecord(_reg5);
+
+//     Registro reg6{"105","llama","CS",1};
+//     _file.AddRecord(reg6);
+
+
+//     cout<<"Bienvenido a la BD:"<<endl;
+//     while(opcion!=0) {
+//         cout << "Menu de Acciones: " << "\n";
+//         cout << "1. Insertar Registro" << "\n";
+//         cout << "2. Buscar Registro" << "\n";
+//         cout << "3. Eliminar Registro" << "\n";
+//         // cout << "4. Listar Todos"<<"\n";
+//         cout << "0. Salir" << "\n";
+//         cout<<"Seleccione opcion: "<<"\n";
+//         cin>>opcion;
+
+//         string key="";
+//         bool _found=false;
+//         bool _delete=false;
+        
+//         switch (opcion){
+//             case 1:
+//                 //Encriptar
+//                 Registro reg;
+//                 reg.setData();
+//                 _file.AddRecord(reg);
+//                 cout<<"Se inserto correctamente"<<endl;
+//                 break;
+//             case 2:
+//                 //Desencriptar
+//                 cout<<"Ingresa key a buscar: ";
+//                 cin>>key;
+//                 Registro _reg;
+//                 _found=_file.Search(key,_reg);
+//                 if(_found){
+//                     _reg.showData();
+//                 }
+//                 else{
+//                     cout<<"No se encontro el registro"<<endl;
+//                 }
+//                 break;
+//             case 3:
+//                 cout<<"Ingresa key a eliminar: ";
+//                 cin>>key;
+//                 _delete=_file.DeleteRecord(key);
+//                 if(_delete)
+//                 {
+//                     cout<<"Se elimino correctamente"<<endl;
+//                 }
+//                 else{
+//                     cout<<"No se encontro el registro"<<endl;
+//                 }
+//                 break;
+//         }
+//     }
+
+//     return 0;
+// }

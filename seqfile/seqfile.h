@@ -106,6 +106,9 @@ private:
         return obj;
     }
 
+
+    
+
      void heapAdd(Registro _reg){
         fstream outFile;
         outFile.open(_reg._id.file,ios::in| ios::out| ios::binary);
@@ -188,6 +191,7 @@ private:
 
         int data_file_size=get_size(data_file);
         int aux_file_size=get_size(aux_file);
+        
         int count=1;
         while(count<data_file_size+aux_file_size){
             Registro next=getNext(regtemp);
@@ -245,7 +249,7 @@ private:
     bool SequentialSearchPrev(string key, pair<Registro, Registro> &res){
         Point hd = GetHeader(data_file);
         res.first = getRegByPos<Registro>(hd.pos, hd.file);
-        while(res.first._id.pos!=-2){
+        while(res.first._next.pos!=-2){
             if(res.first.nombre==key)
                 return true;
             else {
@@ -258,7 +262,7 @@ private:
 
     bool SequentialSearchFromPoint(string key, Point next, pair<Registro, Registro> &res){
         res.first = getRegByPos<Registro>(next.pos, next.file);
-        while(res.first._id.pos!=-2){
+        while(res.first._next.pos!=-2){
             if(res.first.nombre==key)
                 return true;
             else {
@@ -275,6 +279,22 @@ public:
     SequentialFile(string _data_file,string _aux_file){
         this->data_file=_data_file;
         this->aux_file=_aux_file;
+    }
+
+
+     void scanAll(string file) {
+        ifstream inFile;
+        inFile.open(file, ios::binary);
+        //read the first pointer
+        Point delPointer;
+        inFile.read((char *) &delPointer, sizeof(Point));
+        //read the records
+        Registro obj;
+        while (inFile.read((char *) &obj, sizeof(obj))) {
+            if (obj._next.pos !=-1)
+                obj.showData();
+        }
+        inFile.close();
     }
 
 
@@ -537,7 +557,7 @@ public:
         Point hd = GetHeader(data_file);
         Registro obj = getRegByPos<Registro>(hd.pos, hd.file);
         Registro prev = obj;
-        while(obj._id.pos!=-2){
+        while(obj._next.pos!=-2){
             if( obj.nombre == key)
                 return obj;
             else if (obj.nombre > key)
@@ -555,7 +575,7 @@ public:
      Registro SequentialNearSearchFromPoint(string key, Point next){
         Registro obj = getRegByPos<Registro>(next.pos, next.file);
         Registro prev = obj;
-        while(obj._id.pos!=-2){
+        while(obj._next.pos!=-2){
             if(obj.nombre == key)
                 return obj;
             else if (obj.nombre > key)
@@ -572,7 +592,7 @@ public:
     Registro SequentialUpperSearch(string key){
         Point hd = GetHeader(data_file);
         Registro obj = getRegByPos<Registro>(hd.pos, hd.file);
-        while(obj._id.pos!=-2){
+        while(obj._next.pos!=-2){
             if( obj.nombre >= key)
                 return obj;
 
@@ -585,7 +605,7 @@ public:
 
      Registro SequentialUpperSearchFromPoint(string key, Point next){
         Registro obj = getRegByPos<Registro>(next.pos, next.file);
-        while(obj._id.pos!=-2){
+        while(obj._next.pos!=-2){
             if(obj.nombre >= key)
                 return obj;
             else {
