@@ -1,7 +1,7 @@
 #ifndef MOCKER_H
 #define MOCKER_H
 
-#include "..\lib.h"
+#include "../lib.h"
 #include <iostream> 
 #include <string>
 #include <fstream>
@@ -12,10 +12,9 @@ class Mocker{
 string file;
 public:
     Mocker(string _file){
-        this->file=_file;
+        this->file= "mocker/" + _file;
     }
     std::vector<string> GetData(){
-
         std::vector<string> _alldata;
         ifstream myFile;
         myFile.open(file);

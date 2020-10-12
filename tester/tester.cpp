@@ -20,7 +20,6 @@ void Tester::execute(){
 
 template <typename T>
 void Tester::TestSeqFile(vector<string> elements,string data, string dataux){
- 
     //tomar tiempos.
     SequentialFile _file(data,dataux);
     for(int j=0;j<elements.size(); ++j) {
