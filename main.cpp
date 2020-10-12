@@ -82,14 +82,16 @@ int main() {
     _file.AddRecord(reg7);
 
 
-    cout<<"DATA FILE"<<end;
-    cout<<"----------------------"<<endl;
+    ui(_file);
 
-    _file.scanAll(data_file);
+    // cout<<"DATA FILE"<< endl;
+    // cout<<"----------------------"<<endl;
 
-    cout<<"AUX FILE"<<end;
-    cout<<"----------------------"<<endl;
-    _file.scanAll(aux_file);
+    // _file.scanAll(data_file);
+
+    // cout<<"AUX FILE" << endl;
+    // cout<<"----------------------"<<endl;
+    // _file.scanAll(aux_file);
     
     return 0;
 }
