@@ -106,7 +106,7 @@ public:
 
     void insert(Registro _reg){
         if(is_empty(indexfile)){
-            long pos = HeadAddReg(_reg);
+            long pos = WriteInDatafile(_reg);
             Node<T,ORDER> root;
             root.insert_in_node(0,_reg.codigo,pos);
             root.is_leaf=true;
@@ -115,26 +115,28 @@ public:
             //creamos el nodo root
         }else{
             auto root=readNode(0);
-            long pos_file = HeadAddReg(_reg);
+            long pos_file = WriteInDatafile(_reg);
+            //aqui ya se inserto.
             if(root.is_leaf){
                 int pos=getPostoInsertinChildren(root,_reg.codigo);//1
                 root.insert_in_node(pos,_reg.codigo,pos_file);
-                if(!root.is_overflow()){
-                    WriteNode(root.address,root);
-                }else{
-                     split_root(root);
+                WriteNode(root.address,root); 
+                if(root.is_overflow()){
+                   split_root(root);
                 }
+
             }else{
                  auto current=root;
                  Node<T,ORDER> _parent;
                  int pos_in_parent;
-                 int pos_=GetLeaftToInsert(_reg.codigo,current,_parent, pos_in_parent);
+                 int pos_= GetLeaftToInsert(_reg.codigo,current,_parent, pos_in_parent);
                  current.insert_in_node(pos_,_reg.codigo,pos_file);
-                 if(!root.is_overflow()){
-                    WriteNode(current.address,root);
-                }else{
+                 WriteNode(current.address,current);
+
+                 if(current.is_overflow()){
                      split_node(_parent, pos_in_parent);
-                }
+                 }
+                 //nose si el _parent /parent --node o puede el roott 
             }
         }
     }
@@ -142,7 +144,8 @@ public:
 
     void split_node(Node<T,ORDER> &parent,int pos){
         //tener en cuenta que los childres son +1
-        auto to_split = readNode(parent.children[pos]);
+        //falta setearle el true a isleaft
+        auto to_split = readNode(parent.children[pos]);// 5 10 11 15 
         auto left = to_split;
         left.count=0;
         Node<T,ORDER> right;
@@ -178,9 +181,9 @@ public:
                 parent.children[pos] = left.address;
                 parent.children[pos + 1] = right.address;
 
-                WriteNode(parent.address, parent);
-                WriteNode(left.address, left);
-                WriteNode(right.address, right);
+            WriteNode(parent.address, parent);
+            WriteNode(left.address, left);
+            WriteNode(right.address, right);
     }
 
    long getNextPostToInsertIndex(string _file){
@@ -339,27 +342,24 @@ public:
         Registro obj;
         outFile.open(datafile,ios::in| ios::out| ios::binary);
         if (outFile.is_open()) {
-            outFile.seekg(pos * sizeof(Registro));
+            outFile.seekg(pos);
             outFile.read((char *) &obj, sizeof(Registro));
             outFile.close();
         }
         return obj;
     }
 
-    long WriteReg(long pos, Registro _reg){
+    void WriteReg(long pos, Registro _reg){
         fstream outFile;
-        long _pos;
-        outFile.open(indexfile,ios::in| ios::out| ios::binary | std::ofstream::app);
+        outFile.open(datafile,ios::in| ios::out| ios::binary | std::ofstream::app);
         if(outFile.is_open()){
-            outFile.seekg((pos) * sizeof(Registro));
+            outFile.seekg(pos);
             outFile.write((char* )&_reg, sizeof(Registro));
-            _pos=outFile.tellg()- sizeof(Registro);
             outFile.close();
         }
-        return _pos;
     }
 
-    long  HeadAddReg(Registro _reg){
+    long  WriteInDatafile(Registro _reg){
         fstream outFile;
         outFile.open(datafile,ios::in| ios::out| ios::binary| std::ofstream::app);
         long _pos;
