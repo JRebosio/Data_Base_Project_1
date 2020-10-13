@@ -25,6 +25,28 @@ struct Node
 	long count{0};
     long right{0};
 
+
+    void showData(){
+        cout<<"\nId:";
+        cout<<"\address: "<<address;
+        cout<<"\nis_leaf: "<<is_leaf;
+        cout<<"\ncount: "<<count;
+        cout<<"\nright:"<<right;
+        cout<<"\nNext:";
+        cout<<endl;
+        cout<<"\nEntries:";
+        for(int i=0;i<ORDER+1;i++){
+            cout<<entries[i]<<" ";
+        }
+        cout<<endl;
+         cout<<"\nChildren:";
+         for(int i=0;i<ORDER+2;i++){
+            cout<<children[i]<<" ";
+        }
+        cout<<endl;
+
+    }
+
     // Node(int _ORDER): 
 
     //8
@@ -75,6 +97,13 @@ public:
     char nombre[20];
     char carrera[15];
     int ciclo;
+
+    void showData(){
+    cout<<"\nCodigo: "<<codigo;
+    cout<<"\nNombre: "<<nombre;
+    cout<<"\nCarrera: "<<carrera;
+    cout<<"\nCiclo:"<<ciclo;
+    }
 
 };
 
@@ -312,7 +341,7 @@ public:
     //             }
     //         if (pos == -1) return NULL;
 
-    //         long address = node->children[pos];
+    //      dg   long address = node->children[pos];
     //         Record record = read_page(datafile, address);
     //         return record; 
     //     }
@@ -325,12 +354,12 @@ public:
         if(outFile.is_open()){
             outFile.seekg(pos, ios::beg);
             
-            cout<<"address"<<endl;
-            cout<<_reg.address<<endl;
+            // cout<<"address"<<endl;
+            // cout<<_reg.address<<endl;
             
-            cout<<"entries"<<endl;
+            // cout<<"entries"<<endl;
             
-            for(auto u:_reg.entries) cout<<u<<endl;
+            // for(auto u:_reg.entries) cout<<u<<endl;
             
             outFile.write((char* )&_reg, sizeof(Node<T,ORDER>));
             outFile.close();
