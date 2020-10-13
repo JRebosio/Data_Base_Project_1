@@ -104,39 +104,6 @@ public:
         return (bytes==0);
     }
 
-
-// ///////////////
-
-//         void insert(const T &value) {
-//             node root = read_node(header.root_id);
-//             int state = insert(root, value);
-
-//             if (state == BT_OVERFLOW) {
-//                 split_root();
-//             }
-//         }
-
-//         int insert(node &ptr, const T &value) {
-//             int pos = 0;
-//             while (pos < ptr.count && ptr.data[pos] < value) {
-//                 pos++;
-//             }
-//             if (ptr.children[pos] != 0) {
-//                 long page_id = ptr.children[pos];
-//                 node child = read_node(page_id);
-//                 int state = insert(child, value);
-//                 if (state == BT_OVERFLOW) {
-//                     split(ptr, pos);
-//                 }
-//             } else {
-//                 ptr.insert_in_node(pos, value);
-//                 write_node(ptr.page_id, ptr);
-//             }
-//             return ptr.is_overflow() ? BT_OVERFLOW : NORMAL;
-//         }
-// /////////////77
-
-
     void insert(Registro _reg){
         if(is_empty(indexfile)){
             long pos = HeadAddReg(_reg);
@@ -215,50 +182,6 @@ public:
                 WriteNode(left.address, left);
                 WriteNode(right.address, right);
     }
-
-    // //TEMPORAL
-    //  void split(node &parent, int pos) {
-    //             node node_in_overflow = this->read_node(parent.children[pos]);
-    //             node child1 = node_in_overflow;
-    //             child1.count = 0;
-    //             node child2 = this->new_node();
-
-    //             int iter = 0;
-    //             int i;
-    //             for (i = 0; iter < ceil(ORDER / 2.0); i++) {
-    //                 child1.children[i] = node_in_overflow.children[iter];
-    //                 child1.data[i] = node_in_overflow.data[iter];
-    //                 child1.count++;
-    //                 iter++;
-    //             }
-    //             child1.children[i] = node_in_overflow.children[iter];
-
-    //             parent.insert_in_node(pos, node_in_overflow.data[iter]);
-
-    //             if (node_in_overflow.children[0] != 0) {
-    //                 iter++;
-    //             } else {
-    //                 child2.right = child1.right;
-    //                 child1.right = child2.page_id;
-    //                 parent.children[pos + 1] = child2.page_id;
-    //             }
-
-    //             for (i = 0; iter < BTREE_ORDER + 1; i++) {
-    //                 child2.children[i] = node_in_overflow.children[iter];
-    //                 child2.data[i] = node_in_overflow.data[iter];
-    //                 child2.count++;
-    //                 iter++;
-    //             }
-    //             child2.children[i] = node_in_overflow.children[iter];
-
-    //             parent.children[pos] = child1.page_id;
-    //             parent.children[pos + 1] = child2.page_id;
-
-    //             write_node(parent.page_id, parent);
-    //             write_node(child1.page_id, child1);
-    //             write_node(child2.page_id, child2);
-    //         }
-
 
    long getNextPostToInsertIndex(string _file){
         fstream inFile;
@@ -358,9 +281,6 @@ public:
 
 
     }
-
-
-
 
     // Record searchRec(T skey, Node* node){
     //     if(!node->is_leaf){
