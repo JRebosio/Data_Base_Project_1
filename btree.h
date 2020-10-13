@@ -150,7 +150,7 @@ public:
             auto root=readNode(0);
             long pos_file = HeadAddReg(_reg);
             if(root.is_leaf){
-                int pos=getPostoInsertinChildren(root,_reg.key);//1
+                int pos=getPostoInsertinChildren(root,_reg.codigo);//1
                 root.insert_in_node(pos,_reg.codigo,pos_file);
                 if(!root.is_overflow()){
                     WriteNode(root.address,root);
@@ -200,7 +200,7 @@ public:
                 parent.children[pos + 1] = right.address;
             }
 
-                for (i = 0; iter < BTREE_ORDER + 1; i++) {
+                for (i = 0; iter < ORDER + 1; i++) {
                     right.children[i] = to_split.children[iter];
                     right.entries[i] = to_split.entries[iter];
                     right.count++;
@@ -263,7 +263,7 @@ public:
    long getNextPostToInsertIndex(string _file){
         fstream inFile;
         long pos_to_insert;
-        inFile.open(file, ios::in | ios::binary);
+        inFile.open(_file, ios::in | ios::binary);
         if (inFile.is_open()) {
             inFile.seekg(0, ios::end);
             pos_to_insert = inFile.tellg();
@@ -275,7 +275,7 @@ public:
    void split_root(Node<T,ORDER> &root){
 
        Node<T,ORDER> left;
-       Node<T,ORDER> rigth;
+       Node<T,ORDER> right;
        
         int pos = 0;
         int iter = 0;
@@ -290,31 +290,31 @@ public:
         root.entries[0] = root.entries[iter];
         
         left.address=getNextPostToInsertIndex(indexfile);
-        rigth.address=left.address+sizeof(Node<T,ORDER>);
-        left.right = rigth.address;
+        right.address=left.address+sizeof(Node<T,ORDER>);
+        left.right = right.address;
         left.is_leaf=true;
-        rigth.is_leaf=true;
+        right.is_leaf=true;
 
         if (root.children[0] != 0) {
             iter++; // the middle element
         }
 
         for (i = 0; iter < ORDER + 1; i++) {
-            rigth.children[i] = root.children[iter];
-            rigth.entries[i] = root.entries[iter];
-            rigth.count++;
+            right.children[i] = root.children[iter];
+            right.entries[i] = root.entries[iter];
+            right.count++;
             iter++;
         }
-        rigth.children[i] = root.children[iter];
+        right.children[i] = root.children[iter];
 
         root.children[0] = left.address;
-        root.children[1] = rigth.address;
+        root.children[1] = right.address;
         root.count = 1;
         root.is_leaf=false;
 
         WriteNode(root.address, root);
         WriteNode(left.address, left);
-        WriteNode(right.address, rigth);
+        WriteNode(right.address, right);
 
    }
 
@@ -351,7 +351,7 @@ public:
                         pos = i;
                         return pos;
                     }
-                if (pos == -1) return NULL;
+                return pos;
                 // long address = node->children[pos];
                 // Record record = read_page(datafile, address);
             }
