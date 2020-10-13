@@ -2,7 +2,7 @@
 #define BTREE_H
 
 
-
+#include <iostream>
 #include <fstream>
 #include <cstdio>
 #include <string>
@@ -33,6 +33,10 @@ struct Node
     //             /   /    /   /    
 
     //8
+    // Node<T,ORDER>(){
+    //     fill(children, children +  ORDER + 2, -1);
+    //     fill(entries, entries +  ORDER + 1, -1);
+    // }
     void insert_in_node(int pos,const T&value,long _children) {
         int j = count;
             while (j > pos) {
@@ -81,7 +85,7 @@ private:
     string indexfile;
     string datafile;
 public:
-    btree(string _indexfile,string _datafile){
+    btree(const string _indexfile, const string _datafile){
         this->indexfile=_indexfile;
         this->datafile=_datafile;
     }
@@ -106,8 +110,11 @@ public:
 
     void insert(Registro _reg){
         if(is_empty(indexfile)){
-            long pos = WriteInDatafile(_reg);
+            long pos = WriteAndReturnPos(_reg);
+            // cout<<"FFFF"<<endl;
+            // cout<<pos<<endl;
             Node<T,ORDER> root;
+            // cout<<root.count<<endl;
             root.insert_in_node(0,_reg.codigo,pos);
             root.is_leaf=true;
             root.address=0;
@@ -115,16 +122,15 @@ public:
             //creamos el nodo root
         }else{
             auto root=readNode(0);
-            long pos_file = WriteInDatafile(_reg);
+            long pos_file = WriteAndReturnPos(_reg);//inserta en datafile y devuele primera posicion de _reg
             //aqui ya se inserto.
             if(root.is_leaf){
-                int pos=getPostoInsertinChildren(root,_reg.codigo);//1
+                long pos=getPostoInsertinChildren(root,_reg.codigo);//1
                 root.insert_in_node(pos,_reg.codigo,pos_file);
                 WriteNode(root.address,root); 
                 if(root.is_overflow()){
                    split_root(root);
                 }
-
             }else{
                  auto current=root;
                  Node<T,ORDER> _parent;
@@ -248,7 +254,7 @@ public:
 
         // int pos = -1;
         for(int i = 0; i < node.count; i++)
-            if (key > node.entries[i]){
+            if (key < node.entries[i]){
                return i;
             }
         return node.count;
@@ -315,9 +321,17 @@ public:
 
    void WriteNode(long pos,Node<T,ORDER> _reg){
         fstream outFile;
-        outFile.open(indexfile,ios::in| ios::out| ios::binary | std::ofstream::app);
+        outFile.open(indexfile,ios::in| ios::out| ios::binary);
         if(outFile.is_open()){
-            outFile.seekg(pos);
+            outFile.seekg(pos, ios::beg);
+            
+            cout<<"address"<<endl;
+            cout<<_reg.address<<endl;
+            
+            cout<<"entries"<<endl;
+            
+            for(auto u:_reg.entries) cout<<u<<endl;
+            
             outFile.write((char* )&_reg, sizeof(Node<T,ORDER>));
             outFile.close();
         }
@@ -328,7 +342,7 @@ public:
         Node<T,ORDER> obj;
         outFile.open(indexfile,ios::in| ios::out| ios::binary);
         if (outFile.is_open()) {
-            outFile.seekg(pos);
+            outFile.seekg(pos, ios::beg);
             outFile.read((char *) &obj, sizeof(Node<T,ORDER>));
             outFile.close();
         }
@@ -342,7 +356,7 @@ public:
         Registro obj;
         outFile.open(datafile,ios::in| ios::out| ios::binary);
         if (outFile.is_open()) {
-            outFile.seekg(pos);
+            outFile.seekg(pos, ios::beg);
             outFile.read((char *) &obj, sizeof(Registro));
             outFile.close();
         }
@@ -353,15 +367,15 @@ public:
         fstream outFile;
         outFile.open(datafile,ios::in| ios::out| ios::binary | std::ofstream::app);
         if(outFile.is_open()){
-            outFile.seekg(pos);
+            outFile.seekg(pos, ios::beg);
             outFile.write((char* )&_reg, sizeof(Registro));
             outFile.close();
         }
     }
 
-    long  WriteInDatafile(Registro _reg){
+    long  WriteAndReturnPos(Registro _reg){
         fstream outFile;
-        outFile.open(datafile,ios::in| ios::out| ios::binary| std::ofstream::app);
+        outFile.open(datafile,ios::in| ios::out| ios::binary | std::ofstream::app);
         long _pos;
         if(outFile.is_open()){
             outFile.seekg(0,ios::end);
