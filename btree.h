@@ -23,7 +23,7 @@ struct Node
 	long children[ORDER+2];
 	bool is_leaf=false;
 	long count{0};
-    long right{0};
+    long right{-1};
 
 
     void showData(){
@@ -32,15 +32,14 @@ struct Node
         cout<<"\nis_leaf: "<<is_leaf;
         cout<<"\ncount: "<<count;
         cout<<"\nright:"<<right;
-        cout<<"\nNext:";
         cout<<endl;
         cout<<"\nEntries:";
-        for(int i=0;i<ORDER+1;i++){
+        for(int i=0;i<count;i++){
             cout<<entries[i]<<" ";
         }
         cout<<endl;
          cout<<"\nChildren:";
-         for(int i=0;i<ORDER+2;i++){
+         for(int i=0;i<count+1;i++){
             cout<<children[i]<<" ";
         }
         cout<<endl;
@@ -103,6 +102,7 @@ public:
     cout<<"\nNombre: "<<nombre;
     cout<<"\nCarrera: "<<carrera;
     cout<<"\nCiclo:"<<ciclo;
+    cout<<endl;
     }
 
 };
@@ -117,6 +117,22 @@ public:
     btree(const string _indexfile, const string _datafile){
         this->indexfile=_indexfile;
         this->datafile=_datafile;
+    }
+
+    template<typename tipo>
+    void scanAll(string file){
+        ifstream inFile;
+        inFile.open(file, ios::binary);
+        tipo obj;
+        long id=0;
+        while (inFile.read((char *) &obj, sizeof(obj))) {
+            // if (obj._next.pos !=-1)
+                cout<<"Address:"<<id<<endl;
+                obj.showData();
+                id+=sizeof(obj);
+                cout<<endl;
+        }
+        inFile.close();
     }
 
      bool is_empty(string file){
