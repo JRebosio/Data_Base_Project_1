@@ -1,9 +1,6 @@
-
-/*.txt
 *.exe
 *.o
 *.out
 .vscode/*
 .idea/*
-Makefile
-
+*.txt

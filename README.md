@@ -7,12 +7,12 @@
 |-|-|
 |Victor Ostolaza | 201910049 |
 |Jorge Vásquez	| 201310292 |
-|Jorge Rebosio | - |
+|Jorge Rebosio | - 20182025|
 
 
 ## Descripcion
 
-En este proyecto se decidió realizar la implementacion de dos estructuras de datos para el mantenimiento de estos en disco. Los elegidos fueron el **Sequential File** y el **B+Tree Clustered**
+En este proyecto se decidió realizar la implementacion de dos estructuras de datos para el mantenimiento de estos en disco. Los elegidos fueron el **Sequential File** y el **B+Tree Unclustered**
 
 
 ## Objetivos
@@ -47,21 +47,26 @@ Consta de dos archivos. El primero, **data.txt**, mantiene los datos ordenados f
 
 > Para eliminar en el **data.txt** debemos actualizar su puntero a -1 y como actua como una linked list, debemos hacer que el puntero del registro previo para que apunte al siguiente del que se esta eliminando. Si es que el registro que deseamos borrar se encuentra en el aux_file al eliminar un registro  se actualiza el **header_aux** con la direccion del valor a eliminar y a su vez ese valor debe tener como next el antiguo valor del **header_aux**. Esto se debe a que los eliminados en el aux_file funcionan como un stack, es decir, el último registro en ser eliminado, es el primero en ser sobreescribido.
 
-## B+ tree Indexing
+## B+ tree Indexing Clustered 
+
+Consta de dos archivos index.txt y data.txt. En el primer archivo guardamos los indices en forma binaria como estructura **Node** , mientras que en el segundo archivo guardamos los registros de forma binaria como estructura **Register**.En los dos archivos estas estructuras se insertan fisicamente de forma cronologica como van llegando; sin embargo, en el index existe una logica de punteros que hace que trabaje como un arbol.Asimismo las direcciones de la data se almacenan en las hojas del arbol.Ademas, el arbol cuenta con un parametro llamado ORDER el cual es el numero maximo de keys que puede tener, por lo que el numero de hijos sera ORDER+1.
+
+     - Nota: La posicion del nodo root en el archivo index siempre sera 0.
+
 
 ### Insert
-
-> All your files and folders are presented as a tree in the file explorer. You can switch from one to another by clicking a file in the tree.
+> Se recorre el arbol desde la raiz en busca del nodo hoja que va contener el respectivo key. Si hay espacio en el nodo hijo se agrega el key y en el children la direccion al registro creado en el datafile.Si no hay espacio se divide el nodo y actualizamos el padre. (Actualizacion recursiva).
+>
 
 
 ### Search
 
-> All your files and folders are presented as a tree in the file explorer. You can switch from one to another by clicking a file in the tree.
+> Se reccore el arbol desde la raiz en busca del nodo hoja que contiene ese key. Para ellos usamos un metodo recursivo que nos devuelve el registro si lo encuentra, caso contrario nos indica que el registro no existe.
 
 
-### Delete
+<!-- ### Delete
 
-> All your files and folders are presented as a tree in the file explorer. You can switch from one to another by clicking a file in the tree.
+> All your files and folders are presented as a tree in the file explorer. You can switch from one to another by clicking a file in the tree. -->
 
 
 
@@ -116,6 +121,28 @@ O(1) | O(log n) + O(k)  | O(n)
 
 
 
+## B+ tree 
+
+**b**=ORDEN del arbol
+<br>
+**n**= numero de nodos
+
+Busqueda            Insercion
+| ------------- | -------------
+ O(log b n) + O(1)   | Busqueda + reasignacion
+
+
+ - Pruebas Funcionales Insercion
+
+| Test  | Size  |WD Black 1TB 7200RPM (ms) |
+| :------------ |:---------------:| -----:| ------:|
+| 1     | 1000 | 52 |
+| 2      | 8000 | 506 |
+| 3 | 27000 | 1888 |
+| 4| 64000 | 5194 |
+| 5 | 125000 | 10449 |
+
+	-Obervar el archivo tiemposbtree.txt
 
 
 # Pruebas de Uso

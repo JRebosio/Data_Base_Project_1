@@ -6,30 +6,56 @@
 
 void Tester::execute(bool vervose){
 
+    int fileType;
+        cout << "1. Sequential File" << endl << "2. B+ Tree" << endl;
+        string ffile="tiempos.txt";
+        if (fileType == 1){
+            char _file[11];
+            strcpy(_file, ffile.c_str());
 
-    string ffile="tiempos.txt";
-    char _file[11];
-    strcpy(_file, ffile.c_str());
+            ofstream _cout;
+            _cout.open (_file, std::ofstream::out | std::ofstream::app);
 
-    ofstream _cout;
-    _cout.open (_file, std::ofstream::out | std::ofstream::app);
-
-    for(int i=0;i<NUMBER_OF_TESTS;i++){
-        string file=std::to_string(i+1)+".txt";
-        // std::cout<<file<<endl;
-        string data="data"+file;
-        string dataux="data_aux"+file;
-        Mocker mock(file);
-        auto data_ = mock.GetData();
-        auto start = std::chrono::high_resolution_clock::now();
-        TestSeqFile<Registro>(data_,data,dataux, vervose);
-        auto stop = std::chrono::high_resolution_clock::now(); 
-        cout << "Test[" << i + 1 << "] sucessful" << endl;
-        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start); 
-        _cout<<"Test[" << i + 1 << "]"<<"---"<<"Size: "<< data_.size()<<"---"<<"Duracion: "<<duration.count();
+            for(int i=0;i<NUMBER_OF_TESTS;i++){
+                string file=std::to_string(i+1)+".txt";
+                // std::cout<<file<<endl;
+                string data="data"+file;
+                string dataux="data_aux"+file;
+                Mocker mock(file);
+                auto data_ = mock.GetData();
+                auto start = std::chrono::high_resolution_clock::now();
+                TestSeqFile<Registro>(data_,data,dataux, vervose);
+                auto stop = std::chrono::high_resolution_clock::now(); 
+                cout << "Test[" << i + 1 << "] sucessful" << endl;
+                auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start); 
+                _cout<<"Test[" << i + 1 << "]"<<"---"<<"Size: "<< data_.size()<<"---"<<"Duracion: "<<duration.count();
+        }
+        _cout<<endl;
+        _cout.close();
     }
-    _cout<<endl;
-    _cout.close();
+    
+    else{
+        string file="tiemposBtree.txt";
+        ofstream _cout;
+        _cout.open(file, std::ofstream::out | std::ofstream::app);
+        for(int i=1; i<=NUMBER_OF_TESTS; i++){
+            string index="index"+to_string(i)+".txt";
+            string data="data"+to_string(i)+".txt";
+            btree<int, 3> _tree(index,data);
+            auto start = std::chrono::high_resolution_clock::now();
+            for (int j = 1; j <= 1000*i*i*i; j++){
+                Register reg{j, "Nombre", "CS", i%10};
+                _tree.insert(reg);
+            }
+            auto stop = std::chrono::high_resolution_clock::now(); 
+            auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start); 
+            _cout<<"Test[" << i + 1 << "]"<<"---"<<"Size: "<< 1000*i*i*i <<"---"<<"Duracion: "<<duration.count()<<endl;
+            _cout<<endl;
+            
+        }
+        _cout.close();
+    }
+
 }
 
 
