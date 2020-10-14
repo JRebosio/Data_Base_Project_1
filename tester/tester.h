@@ -8,6 +8,7 @@
 #include "../lib.h"
 #include "../mocker/mocker.h"
 #include "../seqfile/seqfile.h"
+#include "../bplustree/btree.h"
 
 
 class Tester{

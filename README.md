@@ -7,7 +7,7 @@
 |-|-|
 |Victor Ostolaza | 201910049 |
 |Jorge Vásquez	| 201310292 |
-|Jorge Rebosio | - |
+|Jorge Rebosio | - 20182025|
 
 
 ## Descripcion
@@ -47,21 +47,26 @@ Consta de dos archivos. El primero, **data.txt**, mantiene los datos ordenados f
 
 > Para eliminar en el **data.txt** debemos actualizar su puntero a -1 y como actua como una linked list, debemos hacer que el puntero del registro previo para que apunte al siguiente del que se esta eliminando. Si es que el registro que deseamos borrar se encuentra en el aux_file al eliminar un registro  se actualiza el **header_aux** con la direccion del valor a eliminar y a su vez ese valor debe tener como next el antiguo valor del **header_aux**. Esto se debe a que los eliminados en el aux_file funcionan como un stack, es decir, el último registro en ser eliminado, es el primero en ser sobreescribido.
 
-## B+ tree Indexing
+## B+ tree Indexing Clustered 
+
+Consta de dos archivos index.txt y data.txt. En el primer archivo guardamos los indices en forma binaria como estructura **Node** , mientras que en el segundo archivo guardamos los registros de forma binaria como estructura **Register**.En los dos archivos estas estructuras se insertan fisicamente de forma cronologica como van llegando; sin embargo, en el index existe una logica de punteros que hace que trabaje como un arbol.Asimismo las direcciones de la data se almacenan en las hojas del arbol.Ademas, el arbol cuenta con un parametro llamado ORDER el cual es el numero maximo de keys que puede tener, por lo que el numero de hijos sera ORDER+1.
+
+     - Nota: La posicion del nodo root en el archivo index siempre sera 0.
+
 
 ### Insert
-
-> All your files and folders are presented as a tree in the file explorer. You can switch from one to another by clicking a file in the tree.
+> 
 
 
 ### Search
 
-> All your files and folders are presented as a tree in the file explorer. You can switch from one to another by clicking a file in the tree.
+> Para encontrar un registro debemos aplicar un binary search en los respectivos keys del arbol. En caso de que el key sea igual al key del registro se retorna.En caso de que el key del registro no este ni el root ni el las hojas retorna que no encontro el registro.
 
 
-### Delete
 
-> All your files and folders are presented as a tree in the file explorer. You can switch from one to another by clicking a file in the tree.
+<!-- ### Delete
+
+> All your files and folders are presented as a tree in the file explorer. You can switch from one to another by clicking a file in the tree. -->
 
 
 

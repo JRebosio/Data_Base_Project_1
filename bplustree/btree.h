@@ -391,7 +391,7 @@ public:
     }
 
      
-    bool search(T skey, Register rec){
+    bool search(T skey, Register &rec){
         auto root = readNode(0);
         return searchRec(skey, root, rec);
     }
@@ -406,7 +406,7 @@ public:
             }
             long address = node.children[pos];
             node = readNode(address);
-            searchRec(skey, node, rec);
+            return searchRec(skey, node, rec);
         }
         else {
             int pos = -1;
@@ -415,9 +415,17 @@ public:
                     pos = i;
                     break;
                 }
-            if (pos == -1) return false;
-
             long address = node.children[pos+1];
+            if (pos == -1){ // 
+                Register ireg=ReadReg(address);
+                    if(ireg.codigo==skey){
+                        rec = ireg;
+                        return true;
+                    }
+                    return false;
+            }
+
+
             rec = ReadReg(address);
             return true; 
         }

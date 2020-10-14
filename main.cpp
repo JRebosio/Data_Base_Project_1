@@ -62,7 +62,7 @@ void ui(){
         }
     }
     else{
-        auto _file = btree<int, 3>("index.txt", "data.txt");
+        btree<int, 3> _file("index5.txt", "data5.txt");
     
         int opcion = -1;
         while(opcion!=0) {
