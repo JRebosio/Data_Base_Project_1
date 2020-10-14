@@ -12,7 +12,7 @@
 
 ## Descripcion
 
-En este proyecto se decidió realizar la implementacion de dos estructuras de datos para el mantenimiento de estos en disco. Los elegidos fueron el **Sequential File** y el **B+Tree Clustered**
+En este proyecto se decidió realizar la implementacion de dos estructuras de datos para el mantenimiento de estos en disco. Los elegidos fueron el **Sequential File** y el **B+Tree Unclustered**
 
 
 ## Objetivos
@@ -55,13 +55,13 @@ Consta de dos archivos index.txt y data.txt. En el primer archivo guardamos los 
 
 
 ### Insert
-> 
+> Se recorre el arbol desde la raiz en busca del nodo hoja que va contener el respectivo key. Si hay espacio en el nodo hijo se agrega el key y en el children la direccion al registro creado en el datafile.Si no hay espacio se divide el nodo y actualizamos el padre. (Actualizacion recursiva).
+>
 
 
 ### Search
 
-> Para encontrar un registro debemos aplicar un binary search en los respectivos keys del arbol. En caso de que el key sea igual al key del registro se retorna.En caso de que el key del registro no este ni el root ni el las hojas retorna que no encontro el registro.
-
+> Se reccore el arbol desde la raiz en busca del nodo hoja que contiene ese key. Para ellos usamos un metodo recursivo que nos devuelve el registro si lo encuentra, caso contrario nos indica que el registro no existe.
 
 
 <!-- ### Delete
@@ -121,6 +121,28 @@ O(1) | O(log n) + O(k)  | O(n)
 
 
 
+## B+ tree 
+
+**b**=ORDEN del arbol
+<br>
+**n**= numero de nodos
+
+Busqueda            Insercion
+| ------------- | -------------
+ O(log b n) + O(1)   | Busqueda + reasignacion
+
+
+ - Pruebas Funcionales Insercion
+
+| Test  | Size  |Seagate 1TB 5400RPM (s)|WD Black 1TB 7200RPM (ms) |
+| :------------ |:---------------:| -----:| ------:|
+| 1     | 100 | 4 | 21 |
+| 2      | 500        |   52 |	412 |
+| 3 | 1000        |    230 |	1479 |
+| 4| 2000 | - | 6002 |
+| 5 | 3000 | - | 17506|
+
+	-Obervar el archivo tiemposbtree.txt
 
 
 # Pruebas de Uso
