@@ -18,12 +18,20 @@ using namespace std;
 template<typename T,int ORDER>
 struct Node 
 {
-    long address{0};
+    long address{-1};
 	T entries[ORDER+1]; 
 	long children[ORDER+2];
 	bool is_leaf=false;
 	long count{0};
     long right{-1};
+
+    // Node(long _adresss){
+    //     address=_adresss;
+    //     count = 0;
+    //     for (int i = 0; i < ORDER + 2; i++) {
+    //         children[i] = 0;
+    //     }
+    // }
 
 
     void showData(){
@@ -193,6 +201,36 @@ public:
     }
 
 
+            //  void insert(const T &value) {
+            //     node root = read_node(header.root_id);
+            //     int state = insert(root, value);
+
+            //     if (state == BT_OVERFLOW) {
+            //         split_root();
+            //     }
+            // }
+
+            // int insert(node &ptr, const T &value) {
+            //     int pos = 0;
+            //     while (pos < ptr.count && ptr.data[pos] < value) {
+            //         pos++;
+            //     }
+            //     if (ptr.children[pos] != 0) {
+            //         long page_id = ptr.children[pos];
+            //         node child = read_node(page_id);
+            //         int state = insert(child, value);
+            //         if (state == BT_OVERFLOW) {
+            //             split(ptr, pos);
+            //         }
+            //     } else {
+            //         ptr.insert_in_node(pos, value);
+            //         write_node(ptr.page_id, ptr);
+            //     }
+            //     return ptr.is_overflow() ? BT_OVERFLOW : NORMAL;
+            // }
+
+
+
     void split_node(Node<T,ORDER> &parent,int pos){
         //tener en cuenta que los childres son +1
         //falta setearle el true a isleaft
@@ -304,8 +342,6 @@ public:
             }
         return node.count;
    }
-
-
 
     int  GetLeaftToInsert(T skey,Node<T,ORDER> &node,Node<T,ORDER> &parent, int &pos_in_parent){
 

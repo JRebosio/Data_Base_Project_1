@@ -3,20 +3,16 @@
 int main(){
     string index="index.txt";
     string data="data.txt";
-    Registro _reg{1,"Jorge","CS",3};
-    Registro _reg2{2,"Lorenzo","CS",3};
-    Registro _reg3{20,"Gustavo","CS",7};
-    Registro _reg4{40,"Luis","CS",6};
-    Registro _reg5{55,"Carlos","CS",5};
-    Registro _reg6{60,"Christian","CS",10};
+    btree<int, 3> _tree(index,data);
+
+    for (int i = 0; i < 8; i++){
+        Registro reg{i+1, "Nombre", "CS", 3};
+        _tree.insert(reg);
+    }
+
    // Registro _reg3{20,"Gustavo","CS",3};
 
-    btree<int, 3> _tree(index,data);
-    
-    _tree.insert(_reg);
-    _tree.insert(_reg2);
-    _tree.insert(_reg3);
-    _tree.insert(_reg4);
+
 
     cout<<"IndexFile"<<endl;
     cout<<"---------------------------"<<endl;
