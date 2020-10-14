@@ -127,20 +127,20 @@ O(1) | O(log n) + O(k)  | O(n)
 <br>
 **n**= numero de nodos
 
-Busqueda       |     Insercion
-------------- | ------------- 
+Busqueda       	|     Insercion
+------------- 	| ------------- 
  O(log b n) + O(1)   | Busqueda + reasignacion
 
 
  - Pruebas Funcionales Insercion
 
-| Test  | Size  |WD Black 1TB 7200RPM (ms) |
-| ------------ |---------------| -----| ------|
-| 1     | 1000 | 52 |
-| 2      | 8000 | 506 |
-| 3 | 27000 | 1888 |
-| 4| 64000 | 5194 |
-| 5 | 125000 | 10449 |
+| Test  	| Size  	|WD Black 1TB 7200RPM (ms) 	|	|
+--------------- |---------------| ------------------------------| ------|
+| 1     	| 1000 		| 52 				|	|
+| 2      	| 8000 		| 506 				|	|
+| 3 		| 27000 	| 1888 				|	|
+| 4		| 64000 	| 5194 				|	|
+| 5 		| 125000 	| 10449 			|	|
 
 	-Obervar el archivo tiemposbtree.txt
 
