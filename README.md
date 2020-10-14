@@ -127,8 +127,8 @@ O(1) | O(log n) + O(k)  | O(n)
 <br>
 **n**= numero de nodos
 
-Busqueda            Insercion
-| ------------- | -------------
+Busqueda       |     Insercion
+------------- | ------------- 
  O(log b n) + O(1)   | Busqueda + reasignacion
 
 
