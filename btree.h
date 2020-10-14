@@ -161,75 +161,102 @@ public:
         return (bytes==0);
     }
 
-    void insert(Registro _reg){
-        if(is_empty(indexfile)){
-            long pos = WriteAndReturnPos(_reg);
+    // void insert(Registro _reg){
+    //     if(is_empty(indexfile)){
+    //         long pos = WriteAndReturnPos(_reg);
+    //         // cout<<"FFFF"<<endl;
+    //         // cout<<pos<<endl;
+    //         Node<T,ORDER> root;
+    //         // cout<<root.count<<endl;
+    //         root.insert_in_node(0,_reg.codigo,pos);
+    //         root.is_leaf=true;
+    //         root.address=0;
+    //         WriteNode(root.address,root);
+    //         //creamos el nodo root
+    //     }else{
+    //         auto root=readNode(0);
+    //         long pos_file = WriteAndReturnPos(_reg);//inserta en datafile y devuele primera posicion de _reg
+    //         //aqui ya se inserto.
+    //         if(root.is_leaf){
+    //             long pos=getPostoInsertinChildren(root,_reg.codigo);//1
+    //             root.insert_in_node(pos,_reg.codigo,pos_file);
+    //             WriteNode(root.address,root); 
+    //             if(root.is_overflow()){
+    //                split_root(root);
+    //             }
+    //         }else{
+    //              auto current=root;
+    //              Node<T,ORDER> _parent;
+    //              int pos_in_parent;
+    //              int pos_= GetLeafToInsert(_reg.codigo,current,_parent, pos_in_parent);
+    //              current.insert_in_node(pos_,_reg.codigo,pos_file);
+    //              WriteNode(current.address,current);
+
+    //              if(current.is_overflow()){
+    //                  split_node(_parent, pos_in_parent);
+    //              }
+    //              //nose si el _parent /parent --node o puede el roott 
+    //         }
+    //     }
+    // }
+
+    void insert(Registro rec){
+        if (is_empty(indexfile)){
+        long pos = WriteAndReturnPos(rec);
             // cout<<"FFFF"<<endl;
             // cout<<pos<<endl;
             Node<T,ORDER> root;
             // cout<<root.count<<endl;
-            root.insert_in_node(0,_reg.codigo,pos);
+            root.insert_in_node(0,rec.codigo,pos);
             root.is_leaf=true;
             root.address=0;
             WriteNode(root.address,root);
             //creamos el nodo root
-        }else{
-            auto root=readNode(0);
-            long pos_file = WriteAndReturnPos(_reg);//inserta en datafile y devuele primera posicion de _reg
-            //aqui ya se inserto.
-            if(root.is_leaf){
-                long pos=getPostoInsertinChildren(root,_reg.codigo);//1
-                root.insert_in_node(pos,_reg.codigo,pos_file);
-                WriteNode(root.address,root); 
-                if(root.is_overflow()){
-                   split_root(root);
-                }
-            }else{
-                 auto current=root;
-                 Node<T,ORDER> _parent;
-                 int pos_in_parent;
-                 int pos_= GetLeaftToInsert(_reg.codigo,current,_parent, pos_in_parent);
-                 current.insert_in_node(pos_,_reg.codigo,pos_file);
-                 WriteNode(current.address,current);
-
-                 if(current.is_overflow()){
-                     split_node(_parent, pos_in_parent);
-                 }
-                 //nose si el _parent /parent --node o puede el roott 
-            }
+        }
+        else{
+            auto root = readNode(0);
+            Node<T, ORDER> parent;
+            int pos_in_parent;
+            insertRec(rec, root, parent, pos_in_parent);
         }
     }
+    
+    void insertRec(Registro rec, Node<T, ORDER> node, Node<T, ORDER> &parent, int &pos_in_parent){
+        if(!node.is_leaf){
+            int pos = 0;
+            for (int i = 0; i < node.count; i++){
+                if (rec.codigo >= node.entries[i])
+                    pos++;
+                else break;
+            }
+            long address = node.children[pos];
+            pos_in_parent = pos;
+            parent = node;
+            node = readNode(address);
+            insertRec(rec, node, parent, pos);
+            node = readNode(address);
+            if(node.is_overflow())
+                if (node.address != 0)
+                    split_node(parent,pos_in_parent);
+                else
+                    split_root(node);
+        }
+        else {
+            int pos = -1;
+            for(int i = 0; i < node.count; i++)
+                if (rec.codigo >= node.entries[i]){
+                    pos = i;
+                    break;
+                }
+            long pos_file = WriteAndReturnPos(rec);
+            node.insert_in_node(pos,rec.codigo,pos_file);
 
-
-            //  void insert(const T &value) {
-            //     node root = read_node(header.root_id);
-            //     int state = insert(root, value);
-
-            //     if (state == BT_OVERFLOW) {
-            //         split_root();
-            //     }
-            // }
-
-            // int insert(node &ptr, const T &value) {
-            //     int pos = 0;
-            //     while (pos < ptr.count && ptr.data[pos] < value) {
-            //         pos++;
-            //     }
-            //     if (ptr.children[pos] != 0) {
-            //         long page_id = ptr.children[pos];
-            //         node child = read_node(page_id);
-            //         int state = insert(child, value);
-            //         if (state == BT_OVERFLOW) {
-            //             split(ptr, pos);
-            //         }
-            //     } else {
-            //         ptr.insert_in_node(pos, value);
-            //         write_node(ptr.page_id, ptr);
-            //     }
-            //     return ptr.is_overflow() ? BT_OVERFLOW : NORMAL;
-            // }
-
-
+            long address = node.children[pos];
+            WriteNode(node.address,node);
+            if(node.is_overflow())
+                split_node(parent,pos_in_parent);
+        }
+    }
 
     void split_node(Node<T,ORDER> &parent,int pos){
         //tener en cuenta que los childres son +1
@@ -270,6 +297,8 @@ public:
                 parent.children[pos] = left.address;
                 parent.children[pos + 1] = right.address;
 
+            left.is_leaf = to_split.is_leaf;
+            right.is_leaf = to_split.is_leaf;
             WriteNode(parent.address, parent);
             WriteNode(left.address, left);
             WriteNode(right.address, right);
@@ -307,9 +336,14 @@ public:
         left.address=getNextPostToInsertIndex(indexfile);
         right.address=left.address+sizeof(Node<T,ORDER>);
         left.right = right.address;
-        left.is_leaf=true;
-        right.is_leaf=true;
-
+        if (root.is_leaf){
+            left.is_leaf=true;
+            right.is_leaf=true;
+        }
+        else{
+            left.is_leaf=false;
+            right.is_leaf=false;
+        }
         if (root.children[0] != 0) {
             iter++; // the middle element
         }
@@ -343,7 +377,7 @@ public:
         return node.count;
    }
 
-    int  GetLeaftToInsert(T skey,Node<T,ORDER> &node,Node<T,ORDER> &parent, int &pos_in_parent){
+    int  GetLeafToInsert(T skey,Node<T,ORDER> &node,Node<T,ORDER> &parent, int &pos_in_parent){
 
             if(!node.is_leaf){
                 int pos=0;
@@ -356,9 +390,9 @@ public:
                 parent=node;
                 pos_in_parent = pos;
                 node = readNode(address);
-                return GetLeaftToInsert(skey,node, parent, pos_in_parent);
+                return GetLeafToInsert(skey,node, parent, pos_in_parent);
             }else{
-               int pos = -1;
+                int pos = -1;
                 for(int i = 0; i < node.count; i++)
                     if (skey > node.entries[i]){
                         pos = i;
@@ -371,34 +405,6 @@ public:
 
 
     }
-
-    // Record searchRec(T skey, Node* node){
-    //     if(!node->is_leaf){
-    //         int pos = 0;
-    //         for (int i = 0; i < node; i++){
-    //             if (skey >= node->entries[i])
-    //                 pos++;
-    //             else break;
-    //         }
-    //         long address = node->children[pos];
-    //         node = read_node(file, address);
-    //         searchRec(skey, node);
-    //     }
-    //     else {
-    //         int pos = -1;
-    //         for(int i = 0; i < node -> count; i++)
-    //             if (skey == node->entries[i]){
-    //                 pos = i;
-    //                 break;
-    //             }
-    //         if (pos == -1) return NULL;
-
-    //      dg   long address = node->children[pos];
-    //         Record record = read_page(datafile, address);
-    //         return record; 
-    //     }
-    // }
-
 
    void WriteNode(long pos,Node<T,ORDER> _reg){
         fstream outFile;
@@ -468,9 +474,43 @@ public:
     }
 
      
+    void search(T skey){
+        auto root = readNode(0);
+        Registro rec;
+        if (searchRec(skey, root, rec))
+            rec.showData();
+        else
+            cout << "Record not found" << endl;
+    }
+
+    bool searchRec(T skey, Node<T, ORDER> node, Registro &rec){
+        if(!node.is_leaf){
+            int pos = 0;
+            for (int i = 0; i < node.count; i++){
+                if (skey >= node.entries[i])
+                    pos++;
+                else break;
+            }
+            long address = node.children[pos];
+            node = readNode(address);
+            searchRec(skey, node, rec);
+        }
+        else {
+            int pos = -1;
+            for(int i = 0; i < node.count; i++)
+                if (skey == node.entries[i]){
+                    pos = i;
+                    break;
+                }
+            if (pos == -1) return false;
+
+            long address = node.children[pos];
+            rec = ReadReg(address);
+            return true; 
+        }
+    }
 
 };
-
 
 
 
