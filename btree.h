@@ -20,7 +20,7 @@ struct Node
 {
     long address{-1};
 	T entries[ORDER+1]; 
-	long children[ORDER+2];
+	long children[ORDER+2]={0};
 	bool is_leaf=false;
 	long count{0};
     long right{-1};
@@ -161,6 +161,45 @@ public:
         return (bytes==0);
     }
 
+     void insert(Registro reg) {
+          if(is_empty(indexfile)){
+            long pos = WriteAndReturnPos(reg);
+            Node<T,ORDER> root;
+            root.insert_in_node(0,reg.codigo,pos);
+            root.is_leaf=true;
+            root.address=0;
+            WriteNode(root.address,root);
+          }
+          else{
+            long pos_file = WriteAndReturnPos(reg);
+            Node<T,ORDER> root = readNode(0);
+            bool state = insert(root, reg,pos_file);
+            if (state) {
+                split_root(root);
+            }
+          }
+      
+    }
+
+    bool insert(Node<T,ORDER> &ptr, Registro reg,long pos_file) {
+        int pos = 0;
+        while (pos < ptr.count && ptr.entries[pos] < reg.codigo) {
+            pos++;
+        }
+        if (!ptr.is_leaf) {
+            long address = ptr.children[pos];
+            Node<T,ORDER> child = readNode(address);
+            bool state = insert(child, reg,pos_file);
+            if (state) {
+                split_node(ptr, pos);
+            }
+        } else {
+            ptr.insert_in_node(pos, reg.codigo,pos_file);
+            WriteNode(ptr.address, ptr);
+        }
+        return ptr.is_overflow() ? true : false;
+    }
+
     // void insert(Registro _reg){
     //     if(is_empty(indexfile)){
     //         long pos = WriteAndReturnPos(_reg);
@@ -200,63 +239,71 @@ public:
     //     }
     // }
 
-    void insert(Registro rec){
-        if (is_empty(indexfile)){
-        long pos = WriteAndReturnPos(rec);
-            // cout<<"FFFF"<<endl;
-            // cout<<pos<<endl;
-            Node<T,ORDER> root;
-            // cout<<root.count<<endl;
-            root.insert_in_node(0,rec.codigo,pos);
-            root.is_leaf=true;
-            root.address=0;
-            WriteNode(root.address,root);
-            //creamos el nodo root
-        }
-        else{
-            auto root = readNode(0);
-            Node<T, ORDER> parent;
-            int pos_in_parent;
-            insertRec(rec, root, parent, pos_in_parent);
-        }
-    }
-    
-    void insertRec(Registro rec, Node<T, ORDER> node, Node<T, ORDER> &parent, int &pos_in_parent){
-        if(!node.is_leaf){
-            int pos = 0;
-            for (int i = 0; i < node.count; i++){
-                if (rec.codigo >= node.entries[i])
-                    pos++;
-                else break;
-            }
-            long address = node.children[pos];
-            pos_in_parent = pos;
-            parent = node;
-            node = readNode(address);
-            insertRec(rec, node, parent, pos);
-            node = readNode(address);
-            if(node.is_overflow())
-                if (node.address != 0)
-                    split_node(parent,pos_in_parent);
-                else
-                    split_root(node);
-        }
-        else {
-            int pos = -1;
-            for(int i = 0; i < node.count; i++)
-                if (rec.codigo >= node.entries[i]){
-                    pos = i;
-                    break;
-                }
-            long pos_file = WriteAndReturnPos(rec);
-            node.insert_in_node(pos,rec.codigo,pos_file);
+    // void insert(Registro rec){
+    //     if (is_empty(indexfile)){
+    //     long pos = WriteAndReturnPos(rec);
+    //         // cout<<"FFFF"<<endl;
+    //         // cout<<pos<<endl;
+    //         Node<T,ORDER> root;
+    //         // cout<<root.count<<endl;
+    //         root.insert_in_node(0,rec.codigo,pos);
+    //         root.is_leaf=true;
+    //         root.address=0;
+    //         WriteNode(root.address,root);
+    //         //creamos el nodo root
+    //     }
+    //     else{
+    //         auto root = readNode(0);
+    //         Node<T, ORDER> parent;
+    //         int pos_in_parent;
+    //         insertRec(rec, root, parent, pos_in_parent);
+    //         root= readNode(0);
+    //         if(root.is_overflow()){
 
-            long address = node.children[pos];
-            WriteNode(node.address,node);
-            if(node.is_overflow())
-                split_node(parent,pos_in_parent);
-        }
-    }
+    //         }
+    //     }
+    // }
+    
+    // void insertRec(Registro rec, Node<T, ORDER> node, Node<T, ORDER> &parent, int &pos_in_parent){
+    //     if(!node.is_leaf){
+    //         int pos = 0;
+    //         for (int i = 0; i < node.count; i++){
+    //             if (rec.codigo <  node.entries[i])
+    //                 pos++;
+    //             else break;
+    //         }
+    //         long address = node.children[pos];
+    //         pos_in_parent = pos;
+    //         parent = node;
+    //         node = readNode(address);
+    //         insertRec(rec, node, parent, pos);
+    //         node = readNode(address);
+    //         if(node.is_overflow())
+    //             if (node.address != 0)
+    //                 split_node(parent,pos_in_parent);
+    //             else
+    //                 split_root(node);
+    //     }
+    //     else {
+    //         int pos = -1;
+    //         for(int i = 0; i < node.count; i++)
+    //             if (rec.codigo < node.entries[i]){
+    //                 pos = i;
+    //                 break;
+    //             }
+    //         long pos_file = WriteAndReturnPos(rec);
+    //         node.insert_in_node(pos,rec.codigo,pos_file);
+
+    //         long address = node.children[pos];
+    //         WriteNode(node.address,node);
+    //         if(node.is_overflow())
+    //             split_node(parent,pos_in_parent);
+    //     }
+    // }
+
+
+
+
 
     void split_node(Node<T,ORDER> &parent,int pos){
         //tener en cuenta que los childres son +1
@@ -504,7 +551,7 @@ public:
                 }
             if (pos == -1) return false;
 
-            long address = node.children[pos];
+            long address = node.children[pos+1];
             rec = ReadReg(address);
             return true; 
         }
