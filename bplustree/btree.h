@@ -149,8 +149,8 @@ public:
 
      void insert(Register reg) {
           if(is_empty(indexfile)){
-            long pos = WriteAndReturnPos(reg);
             Node<T,ORDER> root;
+            long pos = WriteAndReturnPos(reg);         
             root.insert_in_node(0,reg.codigo,pos);
             root.is_leaf=true;
             root.address=0;
@@ -193,18 +193,14 @@ public:
         left.count=0;
         Node<T,ORDER> right;
         right.address=getNextPostToInsertIndex(indexfile);
-        int iter = 0;
-        int i;
-
-        for (i = 0; iter < ceil(ORDER / 2.0); i++) {
-                left.children[i] = to_split.children[iter];
-                left.entries[i] = to_split.entries[iter];
-                left.count++;
-                iter++;
-            }
-         left.children[i] = to_split.children[iter];
-         parent.insert_in_node(pos,to_split.entries[iter],left.address);
-
+        int iter= (ORDER+1)/2;
+        std::copy(to_split.children, to_split.children + iter,  left.children );
+        left.count+=iter;
+        left.children[iter] = to_split.children[iter];
+    
+            
+            parent.insert_in_node(pos,to_split.entries[iter],left.address);
+           
             if (to_split.children[0] != 0) {
                 iter++;
             } else {
@@ -212,13 +208,11 @@ public:
                 left.right = right.address;
                 parent.children[pos + 1] = right.address;
             }
-
-                for (i = 0; iter < ORDER + 1; i++) {
-                    right.children[i] = to_split.children[iter];
-                    right.entries[i] = to_split.entries[iter];
-                    right.count++;
-                    iter++;
-                }
+                int i = ORDER+1- iter;
+                std::copy(to_split.children+iter, to_split.children + ORDER+1,  right.children );
+                right.count+=i;
+                iter = ORDER+1;
+              
                 right.children[i] = to_split.children[iter];
 
                 parent.children[pos] = left.address;

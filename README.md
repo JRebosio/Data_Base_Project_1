@@ -134,13 +134,13 @@ Busqueda            Insercion
 
  - Pruebas Funcionales Insercion
 
-| Test  | Size  |Seagate 1TB 5400RPM (s)|WD Black 1TB 7200RPM (ms) |
+| Test  | Size  |WD Black 1TB 7200RPM (ms) |
 | :------------ |:---------------:| -----:| ------:|
-| 1     | 100 | 4 | 21 |
-| 2      | 500        |   52 |	412 |
-| 3 | 1000        |    230 |	1479 |
-| 4| 2000 | - | 6002 |
-| 5 | 3000 | - | 17506|
+| 1     | 1000 | 52 |
+| 2      | 8000 | 506 |
+| 3 | 27000 | 1888 |
+| 4| 64000 | 5194 |
+| 5 | 125000 | 10449 |
 
 	-Obervar el archivo tiemposbtree.txt
 
