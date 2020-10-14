@@ -11,9 +11,6 @@
 #include <cmath>
 
 using namespace std;
-          //3
-//3      //1 5 
-//4
 
 template<typename T,int ORDER>
 struct Node 
@@ -24,15 +21,6 @@ struct Node
 	bool is_leaf=false;
 	long count{0};
     long right{-1};
-
-    // Node(long _adresss){
-    //     address=_adresss;
-    //     count = 0;
-    //     for (int i = 0; i < ORDER + 2; i++) {
-    //         children[i] = 0;
-    //     }
-    // }
-
 
     void showData(){
         cout<<"\nId:";
@@ -54,18 +42,6 @@ struct Node
 
     }
 
-    // Node(int _ORDER): 
-
-    //8
-
-    //              2 | 7  | 20
-    //             /   /    /   /    
-
-    //8
-    // Node<T,ORDER>(){
-    //     fill(children, children +  ORDER + 2, -1);
-    //     fill(entries, entries +  ORDER + 1, -1);
-    // }
     void insert_in_node(int pos,const T&value,long _children) {
         int j = count;
             while (j > pos) {
@@ -95,8 +71,7 @@ struct Node
 };
 
 
-
-struct Registro
+struct Register
 {
 public:
     //int pos;
@@ -111,6 +86,17 @@ public:
     cout<<"\nCarrera: "<<carrera;
     cout<<"\nCiclo:"<<ciclo;
     cout<<endl;
+    }
+
+    void setData() {
+        cout << "Codigo(10): ";
+        cin >> codigo;
+        cout << "Nombre(20): ";
+        cin >> nombre;
+        cout << "Carrera(15): ";
+        cin >> carrera;
+        cout << "Ciclo(15): ";
+        cin >> ciclo;
     }
 
 };
@@ -155,13 +141,13 @@ public:
         else{
             //lo crea.
             inFile.clear(); 
-            inFile.open(file, ios_base::out); // will create if necessary 
+            inFile.open(file, ios_base::out);
             return true;
         }
         return (bytes==0);
     }
 
-     void insert(Registro reg) {
+     void insert(Register reg) {
           if(is_empty(indexfile)){
             long pos = WriteAndReturnPos(reg);
             Node<T,ORDER> root;
@@ -181,7 +167,7 @@ public:
       
     }
 
-    bool insert(Node<T,ORDER> &ptr, Registro reg,long pos_file) {
+    bool insert(Node<T,ORDER> &ptr, Register reg,long pos_file) {
         int pos = 0;
         while (pos < ptr.count && ptr.entries[pos] < reg.codigo) {
             pos++;
@@ -200,115 +186,9 @@ public:
         return ptr.is_overflow() ? true : false;
     }
 
-    // void insert(Registro _reg){
-    //     if(is_empty(indexfile)){
-    //         long pos = WriteAndReturnPos(_reg);
-    //         // cout<<"FFFF"<<endl;
-    //         // cout<<pos<<endl;
-    //         Node<T,ORDER> root;
-    //         // cout<<root.count<<endl;
-    //         root.insert_in_node(0,_reg.codigo,pos);
-    //         root.is_leaf=true;
-    //         root.address=0;
-    //         WriteNode(root.address,root);
-    //         //creamos el nodo root
-    //     }else{
-    //         auto root=readNode(0);
-    //         long pos_file = WriteAndReturnPos(_reg);//inserta en datafile y devuele primera posicion de _reg
-    //         //aqui ya se inserto.
-    //         if(root.is_leaf){
-    //             long pos=getPostoInsertinChildren(root,_reg.codigo);//1
-    //             root.insert_in_node(pos,_reg.codigo,pos_file);
-    //             WriteNode(root.address,root); 
-    //             if(root.is_overflow()){
-    //                split_root(root);
-    //             }
-    //         }else{
-    //              auto current=root;
-    //              Node<T,ORDER> _parent;
-    //              int pos_in_parent;
-    //              int pos_= GetLeafToInsert(_reg.codigo,current,_parent, pos_in_parent);
-    //              current.insert_in_node(pos_,_reg.codigo,pos_file);
-    //              WriteNode(current.address,current);
-
-    //              if(current.is_overflow()){
-    //                  split_node(_parent, pos_in_parent);
-    //              }
-    //              //nose si el _parent /parent --node o puede el roott 
-    //         }
-    //     }
-    // }
-
-    // void insert(Registro rec){
-    //     if (is_empty(indexfile)){
-    //     long pos = WriteAndReturnPos(rec);
-    //         // cout<<"FFFF"<<endl;
-    //         // cout<<pos<<endl;
-    //         Node<T,ORDER> root;
-    //         // cout<<root.count<<endl;
-    //         root.insert_in_node(0,rec.codigo,pos);
-    //         root.is_leaf=true;
-    //         root.address=0;
-    //         WriteNode(root.address,root);
-    //         //creamos el nodo root
-    //     }
-    //     else{
-    //         auto root = readNode(0);
-    //         Node<T, ORDER> parent;
-    //         int pos_in_parent;
-    //         insertRec(rec, root, parent, pos_in_parent);
-    //         root= readNode(0);
-    //         if(root.is_overflow()){
-
-    //         }
-    //     }
-    // }
-    
-    // void insertRec(Registro rec, Node<T, ORDER> node, Node<T, ORDER> &parent, int &pos_in_parent){
-    //     if(!node.is_leaf){
-    //         int pos = 0;
-    //         for (int i = 0; i < node.count; i++){
-    //             if (rec.codigo <  node.entries[i])
-    //                 pos++;
-    //             else break;
-    //         }
-    //         long address = node.children[pos];
-    //         pos_in_parent = pos;
-    //         parent = node;
-    //         node = readNode(address);
-    //         insertRec(rec, node, parent, pos);
-    //         node = readNode(address);
-    //         if(node.is_overflow())
-    //             if (node.address != 0)
-    //                 split_node(parent,pos_in_parent);
-    //             else
-    //                 split_root(node);
-    //     }
-    //     else {
-    //         int pos = -1;
-    //         for(int i = 0; i < node.count; i++)
-    //             if (rec.codigo < node.entries[i]){
-    //                 pos = i;
-    //                 break;
-    //             }
-    //         long pos_file = WriteAndReturnPos(rec);
-    //         node.insert_in_node(pos,rec.codigo,pos_file);
-
-    //         long address = node.children[pos];
-    //         WriteNode(node.address,node);
-    //         if(node.is_overflow())
-    //             split_node(parent,pos_in_parent);
-    //     }
-    // }
-
-
-
-
-
     void split_node(Node<T,ORDER> &parent,int pos){
-        //tener en cuenta que los childres son +1
-        //falta setearle el true a isleaft
-        auto to_split = readNode(parent.children[pos]);// 5 10 11 15 
+
+        auto to_split = readNode(parent.children[pos]); 
         auto left = to_split;
         left.count=0;
         Node<T,ORDER> right;
@@ -392,7 +272,7 @@ public:
             right.is_leaf=false;
         }
         if (root.children[0] != 0) {
-            iter++; // the middle element
+            iter++;
         }
 
         for (i = 0; iter < ORDER + 1; i++) {
@@ -446,8 +326,6 @@ public:
                         return pos;
                     }
                 return pos;
-                // long address = node->children[pos];
-                // Record record = read_page(datafile, address);
             }
 
 
@@ -457,15 +335,7 @@ public:
         fstream outFile;
         outFile.open(indexfile,ios::in| ios::out| ios::binary);
         if(outFile.is_open()){
-            outFile.seekg(pos, ios::beg);
-            
-            // cout<<"address"<<endl;
-            // cout<<_reg.address<<endl;
-            
-            // cout<<"entries"<<endl;
-            
-            // for(auto u:_reg.entries) cout<<u<<endl;
-            
+            outFile.seekg(pos, ios::beg);         
             outFile.write((char* )&_reg, sizeof(Node<T,ORDER>));
             outFile.close();
         }
@@ -485,52 +355,48 @@ public:
 
 
 
-    Registro ReadReg(long pos){
+    Register ReadReg(long pos){
         ifstream outFile;
-        Registro obj;
+        Register obj;
         outFile.open(datafile,ios::in| ios::out| ios::binary);
         if (outFile.is_open()) {
             outFile.seekg(pos, ios::beg);
-            outFile.read((char *) &obj, sizeof(Registro));
+            outFile.read((char *) &obj, sizeof(Register));
             outFile.close();
         }
         return obj;
     }
 
-    void WriteReg(long pos, Registro _reg){
+    void WriteReg(long pos, Register _reg){
         fstream outFile;
         outFile.open(datafile,ios::in| ios::out| ios::binary | std::ofstream::app);
         if(outFile.is_open()){
             outFile.seekg(pos, ios::beg);
-            outFile.write((char* )&_reg, sizeof(Registro));
+            outFile.write((char* )&_reg, sizeof(Register));
             outFile.close();
         }
     }
 
-    long  WriteAndReturnPos(Registro _reg){
+    long  WriteAndReturnPos(Register _reg){
         fstream outFile;
         outFile.open(datafile,ios::in| ios::out| ios::binary | std::ofstream::app);
         long _pos;
         if(outFile.is_open()){
             outFile.seekg(0,ios::end);
-            outFile.write((char* )&_reg, sizeof(Registro));
-            _pos=outFile.tellg()- sizeof(Registro);
+            outFile.write((char* )&_reg, sizeof(Register));
+            _pos=outFile.tellg()- sizeof(Register);
             outFile.close();
         }
         return _pos;
     }
 
      
-    void search(T skey){
+    bool search(T skey, Register rec){
         auto root = readNode(0);
-        Registro rec;
-        if (searchRec(skey, root, rec))
-            rec.showData();
-        else
-            cout << "Record not found" << endl;
+        return searchRec(skey, root, rec);
     }
 
-    bool searchRec(T skey, Node<T, ORDER> node, Registro &rec){
+    bool searchRec(T skey, Node<T, ORDER> node, Register &rec){
         if(!node.is_leaf){
             int pos = 0;
             for (int i = 0; i < node.count; i++){
