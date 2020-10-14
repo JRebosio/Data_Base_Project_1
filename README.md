@@ -17,7 +17,7 @@ En este proyecto se decidió realizar la implementacion de dos estructuras de da
 
 ## Objetivos
 
-- Implementar las funciones de **Insertar**,**Buscar**,**Eliminar** para cada estructura de datos. 
+- Implementar las funciones de **Insertar**,**Buscar**,**Eliminar** para cada estructura de datos.
 - Realizar mediciones de desempeño en cada estructura y comparalos.
 - Diseñar una pequeña interface de comandos para la interaccion con los datos en disco.
 
@@ -41,13 +41,13 @@ Consta de dos archivos. El primero, **data.txt**, mantiene los datos ordenados f
 ### Search
 
 >Debido a que el archivo **data.txt** se encuentra ordenado de manera fisica por un campo, se puede realizar una busqueda binaria sobre este siempre y cuando no haya un campo marcado como eliminado. Si no se llegara a encontrar el campo esperado en el data_file tras la busqueda binaria, o si el data_file contara con un registro eliminado, se procede a hacer una búsqueda secuencial.
- 
+
 
 ### Delete
 
 > Para eliminar en el **data.txt** debemos actualizar su puntero a -1 y como actua como una linked list, debemos hacer que el puntero del registro previo para que apunte al siguiente del que se esta eliminando. Si es que el registro que deseamos borrar se encuentra en el aux_file al eliminar un registro  se actualiza el **header_aux** con la direccion del valor a eliminar y a su vez ese valor debe tener como next el antiguo valor del **header_aux**. Esto se debe a que los eliminados en el aux_file funcionan como un stack, es decir, el último registro en ser eliminado, es el primero en ser sobreescribido.
 
-## B+ tree Indexing Clustered 
+## B+ tree Indexing Clustered
 
 Consta de dos archivos index.txt y data.txt. En el primer archivo guardamos los indices en forma binaria como estructura **Node** , mientras que en el segundo archivo guardamos los registros de forma binaria como estructura **Register**.En los dos archivos estas estructuras se insertan fisicamente de forma cronologica como van llegando; sin embargo, en el index existe una logica de punteros que hace que trabaje como un arbol.Asimismo las direcciones de la data se almacenan en las hojas del arbol.Ademas, el arbol cuenta con un parametro llamado ORDER el cual es el numero maximo de keys que puede tener, por lo que el numero de hijos sera ORDER+1.
 
@@ -121,32 +121,33 @@ O(1) | O(log n) + O(k)  | O(n)
 
 
 
-## B+ tree 
+## B+ tree
 
 **b**=ORDEN del arbol
 <br>
 **n**= numero de nodos
 
 Busqueda       	|     Insercion
-------------- 	| ------------- 
+------------- 	| -------------
  O(log b n) + O(1)   | Busqueda + reasignacion
 
 
  - Pruebas Funcionales Insercion
 
-| Test  	| Size  	|WD Black 1TB 7200RPM (ms) 	|	
---------------- |---------------| ------------------------------| 
+| Test  	| Size  	|WD Black 1TB 7200RPM (ms) 	|
+--------------- |---------------| ------------------------------|
 | 1     	| 1000 		| 52 				|
-| 2      	| 8000 		| 506 				|	
-| 3 		| 27000 	| 1888 				|	
-| 4		| 64000 	| 5194 				|	
-| 5 		| 125000 	| 10449 			|	
+| 2      	| 8000 		| 506 				|
+| 3 		| 27000 	| 1888 				|
+| 4		| 64000 	| 5194 				|
+| 5 		| 125000 	| 10449 			|
 
 	-Obervar el archivo tiemposbtree.txt
 
 
-# Pruebas de Uso
+# Videos
 
-Mostrar la interface de consola
 
+[Explicación del proyecto](https://www.youtube.com/watch?v=Hu5OWYJJbAc)
+[Pruebas funcionales](https://www.youtube.com/watch?v=Jui-Td1HbXI)
 
